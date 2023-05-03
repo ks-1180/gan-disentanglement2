@@ -17,7 +17,7 @@ export function WalkDisplay({direction, walk}) {
     >
       <CardMedia component="img" image={path} alt="s" />
       <CardContent sx={{ flexGrow: 1 }}>
-        <Slider
+{/*         <Slider
           aria-label="Temperature"
           defaultValue={10}
           getAriaValueText={valuetext}
@@ -26,7 +26,7 @@ export function WalkDisplay({direction, walk}) {
           marks
           min={0}
           max={10}
-        />
+        /> */}
       </CardContent>
       {/* <CardActions>
                   <Button size="small">View</Button>
