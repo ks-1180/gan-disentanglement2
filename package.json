@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "node download-and-extract.js && next dev",
+    "build": "node download-and-extract.js && next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -17,13 +17,17 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.12.0",
     "@prisma/client": "^4.12.0",
+    "@sveltejs/adapter-netlify": "^1.0.0-next.88",
+    "@sveltejs/kit": "^1.0.0-next.589",
     "d3": "^7.8.4",
     "d3-fetch": "^3.0.1",
     "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
     "next": "13.3.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "rimraf": "^5.0.0",
+    "unzipper": "^0.10.11"
   },
   "devDependencies": {
     "prisma": "^4.12.0"
