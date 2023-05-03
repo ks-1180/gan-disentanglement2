@@ -99,13 +99,10 @@ export function FilterDialog({ direction, setDirection }) {
   const facialHairChips = facialHairAtt.map((att) => chipLayout(att));
 
   const accessoiresChips = accessoiresAtt.map((att) => chipLayout(att));
-
+  
   return (
     <div>
       <Grid container alignItems={"center"} spacing={2}>
-        <Grid item>
-          <Typography>{direction.label}</Typography>
-        </Grid>
         <Grid item>
           <Button
             onClick={handleClickOpen}
@@ -114,6 +111,15 @@ export function FilterDialog({ direction, setDirection }) {
           >
             Settings
           </Button>
+        </Grid>
+        <Grid item>
+          <Chip
+            label={direction.label}
+            variant={"filled"}
+            color={"default"}
+            onDelete={handleClickOpen}
+          />
+          {/* <Typography>{direction.label}</Typography> */}
         </Grid>
       </Grid>
       <Dialog
@@ -170,7 +176,7 @@ export function FilterDialog({ direction, setDirection }) {
           </Box>
         </DialogContent>
 
-{/*         <DialogActions>
+        {/*         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={handleClose}>Subscribe</Button>
         </DialogActions>

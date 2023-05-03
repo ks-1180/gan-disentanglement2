@@ -60,7 +60,7 @@ export default function Album() {
             </Grid>
             */}
             <Grid item xs={12} sm={12} md={6}>
-              <Grid container>
+              <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <UmapDisplay direction={direction} walk={walk} setWalk={setWalk}/>
                 </Grid>

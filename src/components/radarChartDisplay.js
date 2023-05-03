@@ -10,7 +10,7 @@ export function RadarChartDisplay(props) {
             flexDirection: "column",
           }}
         >
-          <CardContent sx={{ flexGrow: 1 }}>
+          <CardContent sx={{ flexGrow: 1}}>
             <RadarChart {...props}/>
           </CardContent>
           {/* <CardActions>
