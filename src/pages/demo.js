@@ -31,8 +31,7 @@ function Copyright() {
 export default function Album() {
 
   const [direction, setDirection] = useState({label: 'Eyeglasses', value: 'Eyeglasses'});
-  console.log(direction)
-  const [walk, setWalk] = useState(0)
+  const [walk, setWalk] = useState(0);
 
   return (
     <>

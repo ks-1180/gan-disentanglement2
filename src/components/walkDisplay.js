@@ -6,7 +6,6 @@ function valuetext(value) {
 
 export function WalkDisplay({direction, walk}) {
   const path = `/walks/${direction.value}/${walk}.jpg`;
-  console.log(path);
   return (
     <Card
       sx={{

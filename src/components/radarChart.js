@@ -44,17 +44,13 @@ const generateRadarChart2 = (ref, data, walk, direction) => {
   const scaleR = 200;
   const radius = (width - scaleR) / 2;
 
-  console.log(radius);
-
   d3.select(ref.current).selectAll("svg").remove();
 
   // const walk = data.
   // transform csv to json, with walk id as key
-  console.log('data: ', data);
   data = data.filter(function(d) {
     return d.walk == walk;
   })
-  console.log('newData: ', data);
   const d = data[0];
 
   // TODO: later select columns with most impakt
@@ -80,7 +76,6 @@ const generateRadarChart2 = (ref, data, walk, direction) => {
       return obj;
     }
   );
-  console.log(data);
   
   /* var obj = { 'walk': '0_' + d.walk, 
               'Smiling': d['0_Smiling'], 
@@ -230,7 +225,7 @@ const RadarChart = ({direction, walk}) => {
     //get walk data TODO: change key to something more unique
     const localData = localStorage.getItem(direction.value);
     setIsDataLoaded(false)
-    if (localData == null) {
+    if (false) {
         setData(JSON.parse(localData));
         setIsDataLoaded(true);
     } else {

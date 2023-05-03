@@ -14,6 +14,7 @@ const generateScatterplot = (ref, data, walk, handleClick) => {
     d3.select(ref.current).selectAll("svg").remove();
 
     // create scales for the x and y axes
+    console.log(data);
     const xScale = d3
         .scaleLinear()
         //.domain([0, d3.max(data, (d) => d[0])])
@@ -76,9 +77,10 @@ const Scatterplot = ({direction, walk, setWalk}) => {
 
     useEffect(() => {
         console.log('umap: ', direction.value)
-        const localData = localStorage.getItem(direction.value);
         setIsDataLoaded(false);
-        if (localData == null) {
+        const localData = localStorage.getItem(direction.value);
+        console.log('localData', localData);
+        if (false) {
             setData(JSON.parse(localData));
             setIsDataLoaded(true);
         } else {
@@ -92,7 +94,8 @@ const Scatterplot = ({direction, walk, setWalk}) => {
         }
         setIsDataLoaded(true);
     }, [direction]);
-
+// Receding_Hairline.csv
+// Receding_Hairline
     return (
         <>
             {isDataLoaded ? (

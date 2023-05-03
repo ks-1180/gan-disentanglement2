@@ -65,7 +65,6 @@ const RegressionScatterplot = ({ direction, walk, setWalk }) => {
 
     const handleClick = (event, d) => {
         // your code to handle click event
-        console.log("Click:", d);
         setWalk(d.walk);
     };
 
@@ -76,12 +75,11 @@ const RegressionScatterplot = ({ direction, walk, setWalk }) => {
     useEffect(() => {
         const localData = localStorage.getItem(direction.value);
         setIsDataLoaded(false);
-        if (localData == null) {
+        if (false) {
             setData(JSON.parse(localData));
             setIsDataLoaded(true);
         } else {
             const path = `/regression/${direction.value}.csv`;
-            console.log(path);
             d3.csv(path).then((data) => {
                 setData(data);
                 setIsDataLoaded(true);

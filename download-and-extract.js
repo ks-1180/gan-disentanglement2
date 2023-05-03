@@ -1,12 +1,12 @@
 const https = require("https");
 const fs = require("fs");
 const path = require("path");
-const unzipper = require("unzipper");
+const AdmZip = require("adm-zip");
 
 const downloadUrl = "https://owncloud.tuwien.ac.at/index.php/s/t3g1Mdoqejf2Ggp/download";
-const destinationPath = "./public.zip";
-const publicFolderPath = "./public";
-const macosxFolderPath = "./__MACOSX";
+const destinationPath = path.resolve("./public.zip");
+const publicFolderPath = path.resolve("./public");
+const macosxFolderPath = path.resolve("./__MACOSX");
 
 function folderExists(folderPath) {
   return fs.existsSync(folderPath) && fs.lstatSync(folderPath).isDirectory();
@@ -58,13 +58,21 @@ function downloadFile(url, dest) {
   });
 }
 
-async function extractZipFile(zipPath, outputPath) {
-  return new Promise((resolve, reject) => {
-    fs.createReadStream(zipPath)
-      .pipe(unzipper.Extract({ path: outputPath }))
-      .on("close", resolve)
-      .on("error", reject);
-  });
+// async function extractZipFile(zipPath, outputPath) {
+//   return new Promise((resolve, reject) => {
+//     extractZip(zipPath, { dir: outputPath }, (error) => {
+//       if (error) {
+//         reject(error);
+//       } else {
+//         resolve();
+//       }
+//     });
+//   });
+// }
+
+function extractZipFile(zipPath, outputPath) {
+  const zip = new AdmZip(zipPath);
+  zip.extractAllTo(outputPath, true);
 }
 
 (async () => {
@@ -80,7 +88,7 @@ async function extractZipFile(zipPath, outputPath) {
       console.log("Download complete.");
 
       console.log("Extracting zip file...");
-      await extractZipFile(destinationPath, './');
+      await extractZipFile(destinationPath, path.resolve('./'));
       console.log("Extraction complete.");
 
       console.log("Removing zip file...");
