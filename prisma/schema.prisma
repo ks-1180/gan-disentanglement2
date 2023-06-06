@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Radar {
+  id    Int     @id @default(autoincrement())
+  direction String @unique
+  walks RadarWalk[]
+}
+
+model RadarWalk {
+  id    Int     @id @default(autoincrement())
+  radar Radar @relation(fields: [radarId], references: [id])
+  radarId Int
+  direction String
+  steps Int
+  from Float
+  to Float
+  scores RadarWalkScore[]
+}
+
+model RadarWalkScore {
+  id    Int     @id @default(autoincrement())
+  radarWalk RadarWalk @relation(fields: [radarWalkId], references: [id])
+  radarWalkId Int
+  score Float
+}

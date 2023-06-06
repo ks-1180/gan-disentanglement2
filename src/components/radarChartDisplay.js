@@ -13,10 +13,6 @@ export function RadarChartDisplay(props) {
           <CardContent sx={{ flexGrow: 1}}>
             <RadarChart {...props}/>
           </CardContent>
-          {/* <CardActions>
-                      <Button size="small">View</Button>
-                      <Button size="small">Edit</Button>
-                    </CardActions> */}
         </Card>
       );
 }

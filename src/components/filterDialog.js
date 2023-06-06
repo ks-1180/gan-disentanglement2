@@ -47,12 +47,8 @@ const accessoiresAtt = [
 ];
 
 export function FilterDialog({ direction, setDirection }) {
-  const [open, setOpen] = React.useState(false); // TODO:change back to true
-  // const [selectedAttribute, setAttribute] = React.useState("");
+  const [open, setOpen] = React.useState(false);
 
-  // const handleClickOpen = (scrollType) => () => {
-  //   setOpen(true);
-  // };
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -99,7 +95,7 @@ export function FilterDialog({ direction, setDirection }) {
   const facialHairChips = facialHairAtt.map((att) => chipLayout(att));
 
   const accessoiresChips = accessoiresAtt.map((att) => chipLayout(att));
-  
+
   return (
     <div>
       <Grid container alignItems={"center"} spacing={2}>

@@ -29,9 +29,10 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "rimraf": "^5.0.0",
-    "unzipper": "^0.10.11"
+    "unzipper": "^0.10.11",
+    "zustand": "^4.3.8"
   },
   "devDependencies": {
-    "prisma": "^4.12.0"
+    "prisma": "^4.15.0"
   }
 }

@@ -13,10 +13,6 @@ export function UmapDisplay(props) {
           <CardContent sx={{ flexGrow: 1 }}>
             <Scatterplot {...props}/>
           </CardContent>
-          {/* <CardActions>
-                      <Button size="small">View</Button>
-                      <Button size="small">Edit</Button>
-                    </CardActions> */}
         </Card>
       );
 }

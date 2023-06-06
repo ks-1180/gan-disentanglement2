@@ -214,13 +214,6 @@ const RadarChart = ({direction, walk}) => {
   }, [data, walk, direction]);
 
   useEffect(() => {
-    const radarData = [
-      { name: 'Category 1', value: 5 },
-      { name: 'Category 2', value: 8 },
-      { name: 'Category 3', value: 3 },
-      { name: 'Category 4', value: 6 },
-      { name: 'Category 5', value: 9 },
-    ];
     console.log("radar: ", direction.value);
     //get walk data TODO: change key to something more unique
     const localData = localStorage.getItem(direction.value);
@@ -236,15 +229,6 @@ const RadarChart = ({direction, walk}) => {
         localStorage.setItem(direction.value, JSON.stringify)
       });
     }
-
-    //setData(radarData);
-    //generateRadarChart(chartRef, data);
-    //generateBarChart(chartRef, data);
-    //d3.csv('/data/dummy.csv').then((d) => {
-    //  setData(d);
-    //  setIsDataLoaded(true);
-    //});
-
   }, [direction]);
 
   return (

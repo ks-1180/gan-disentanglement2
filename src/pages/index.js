@@ -1,17 +1,13 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
 import styles from '@component/styles/Home.module.css'
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import ButtonBases from '@component/components/complex-buttons';
 
 export default function Home() {
   return (
@@ -31,38 +27,37 @@ export default function Home() {
       </AppBar>
       <main className={styles.main}>
         {/* Hero unit */}
-        <Box
-          sx={{
-            bgcolor: 'background.paper',
-            pt: 8,
-            pb: 6,
-          }}
-        >
-          <Container maxWidth="sm">
-            <Typography
-              component="h1"
-              variant="h2"
-              align="center"
-              color="text.primary"
-              gutterBottom
-            >
-              Hero Banner
-            </Typography>
-            <Typography variant="h5" align="center" color="text.secondary" paragraph>
-              Something short and leading about the collection below—its contents,
-              the creator, etc. Make it short and sweet, but not too short so folks
-              don&apos;t simply skip over it entirely.
-            </Typography>
-            <Stack
-              sx={{ pt: 4 }}
-              direction="row"
-              spacing={2}
-              justifyContent="center"
-            >
-              <Button href='/demo' variant="outlined">Test visualization</Button>
-            </Stack>
-          </Container>
-        </Box>
+        <Container maxWidth="md">
+          <Grid container spacing={5}>
+            <Grid item xs={12}>
+              <Typography
+                component="h1"
+                variant="h2"
+                color="text.primary"
+                gutterBottom
+              >
+                GAN Disentanglement: Unraveling the Complexities of Generative Networks
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <ButtonBases />
+            </Grid>
+            <Grid item>
+              <Typography variant="h5" color="text.secondary" paragraph>
+                Welcome to our project, an in-depth exploration of GAN disentanglement led by Katharina Scheucher and Christian Stippel. As part of the Visualization 2 university course, this web application aims to elucidate the intricate mechanics of Generative Adversarial Networks (GANs) and the fascinating realm of disentanglement.
+              </Typography>
+              <Typography variant="h5" color="text.secondary" paragraph>
+                GANs, robust machine learning models, have gained significant attention for their ability to generate realistic synthetic data. While powerful, the understanding of the latent space that controls the output remains a complex challenge. This project focuses on this area of GANs, often referred to as 'disentanglement', which seeks to separate and independently control the various factors of variation within the model's output.
+              </Typography>
+              <Typography variant="h5" color="text.secondary" paragraph>
+                This interactive web application boasts four main features. Firstly, it provides a reimplementation of the renowned paper 'Interactively Assessing Disentanglement in GANs', harnessing state-of-the-art frontend technologies such as React, Next.js, and MUI. Secondly, it introduces a powerful semantic editing tool that aids in understanding and manipulating the characteristics of generated samples. Thirdly, it offers a unique single walk visualization tool, complete with radar chart and videos, to track and understand the transformations within the latent space. Lastly, an editing visualization tree provides a comprehensive visual depiction of the complex changes in the data, aiding in grasping the underpinnings of GAN disentanglement.
+              </Typography>
+              <Typography variant="h5" color="text.secondary" paragraph>
+                Join Katharina Scheucher, a dedicated AI researcher with a flair for creating intuitive visualizations, and Christian Stippel, a forward-thinking computer scientist passionate about untangling the intricacies of machine learning algorithms, on this enlightening journey through the layers of GANs.
+              </Typography>
+            </Grid>
+          </Grid>
+        </Container>
         <Grid container spacing={7}>
           <Grid item xs={12}>
             <Typography variant='h6' textAlign='center' paddingTop={0}>

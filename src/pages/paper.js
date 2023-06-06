@@ -7,31 +7,25 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
+import { Button, Card, CardContent, CardMedia, Slider } from "@mui/material";
+import Stack from "@mui/material/Stack";
 
 import { WalkDisplay } from "@component/components/walkDisplay";
 import { FilterDialog } from "@component/components/filterDialog";
 import { RadarChartDisplay } from "@component/components/radarChartDisplay";
 import { UmapDisplay } from "@component/components/umapDisplay";
 import RegressionScatterplot from "@component/components/regressionScatterplot";
+import Copyright from "@component/components/copyright";
+import { useRouter } from "next/router";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {"Copyright © Kathi & Christian "}
-      {/* <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "} */}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
-// TODO: discuss why this is named Album
-export default function Album() {
+export default function PaperPage() {
 
-  const [direction, setDirection] = useState({label: 'Eyeglasses', value: 'Eyeglasses'});
+  const [direction, setDirection] = useState({ label: 'Eyeglasses', value: 'Eyeglasses' });
   const [walk, setWalk] = useState(0);
+  const router = useRouter();
+
+  const path = `/walks/${direction.value}/${walk}.jpg`;
 
   return (
     <>
@@ -46,30 +40,35 @@ export default function Album() {
       <main>
         <Container sx={{ py: 4 }} maxWidth="lg">
           <Grid container spacing={2}>
-            <Grid item>
-              <FilterDialog direction={direction} setDirection={setDirection} />
-            </Grid>
             <Grid item xs={12} sm={12} md={12}>
-              <WalkDisplay direction={direction} walk={walk}/>
+              <Card
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <CardMedia component="img" image={path} alt="s" />
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Stack direction={'row'} spacing={3}>
+                    <FilterDialog direction={direction} setDirection={setDirection} />
+                    <Button variant="contained" onClick={()=>{router.push(`paper/${direction.value}/${walk}`)}}>Details</Button>
+                  </Stack>
+                </CardContent>
+              </Card>
             </Grid>
-            {
-            /*
-            <Grid item xs={12} sm={12} md={12}>
-              <RadarChartDisplay />
-            </Grid>
-            */}
             <Grid item xs={12} sm={12} md={6}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <UmapDisplay direction={direction} walk={walk} setWalk={setWalk}/>
+                  <UmapDisplay direction={direction} walk={walk} setWalk={setWalk} />
                 </Grid>
                 <Grid item xs={12}>
-                  <RegressionScatterplot direction={direction} walk={walk} setWalk={setWalk}/>
+                  <RegressionScatterplot direction={direction} walk={walk} setWalk={setWalk} />
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={12} sm={12} md={6}>
-              <RadarChartDisplay direction={direction} walk={walk}/>
+              <RadarChartDisplay direction={direction} walk={walk} />
             </Grid>
           </Grid>
         </Container>
