@@ -10,26 +10,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Radar {
+model Walk {
   id    Int     @id @default(autoincrement())
-  direction String @unique
-  walks RadarWalk[]
-}
-
-model RadarWalk {
-  id    Int     @id @default(autoincrement())
-  radar Radar @relation(fields: [radarId], references: [id])
-  radarId Int
   direction String
-  steps Int
-  from Float
-  to Float
-  scores RadarWalkScore[]
+  video String
+  image String
+  attributes Attribute[]
 }
 
-model RadarWalkScore {
+model Attribute {
   id    Int     @id @default(autoincrement())
-  radarWalk RadarWalk @relation(fields: [radarWalkId], references: [id])
-  radarWalkId Int
+  walk Walk @relation(fields: [walkId], references: [id])
+  walkId Int
   score Float
 }
+
+model Score {
+  id    Int     @id @default(autoincrement())
+  index Int
+  score Float
+}
+
