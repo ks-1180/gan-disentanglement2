@@ -12,6 +12,7 @@ import Copyright from '@component/components/copyright';
 import { Card, CardContent, CardMedia, Slider } from "@mui/material";
 import { WalkDisplay } from "@component/components/walkDisplay";
 import { RadarChartDisplay } from "@component/components/radarChartDisplay";
+import VideoCard from '@component/components/video';
 
 
 export async function getStaticPaths() {
@@ -30,18 +31,18 @@ export async function getStaticProps({ params }) {
     // Fetch necessary data for the walk using params.walkId and params.direction
     console.log(params);
 
-    return { props: { direction: params.direction, walk: params.walk } }
+    return { props: { direction: params.direction, walk: params.walk, space: params.space } }
 }
 
 
-const Walk = ({ direction, walk }) => {
+const Walk = ({ space, direction, walk }) => {
     const router = useRouter()
 
     if (router.isFallback) {
         // This will be displayed while waiting for getStaticProps to finish
         return <div>Loading...</div>
     }
-    console.log(direction, walk);
+    console.log(space, direction, walk);
 
     const path = `/walks/${direction}/${walk}.jpg`;
     return (
@@ -78,7 +79,12 @@ const Walk = ({ direction, walk }) => {
                                     />
                                 </CardContent>
                             </Card>
-
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <VideoCard />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <VideoCard />
                         </Grid>
                         <Grid item xs={12} sm={12} md={6}>
                             <RadarChartDisplay direction={{ value: direction }} walk={walk} />

@@ -11,23 +11,26 @@ datasource db {
 }
 
 model Walk {
-  id    Int     @id @default(autoincrement())
-  direction String
-  video String
-  image String
+  id         Int         @id @default(autoincrement())
+  space      String
+  direction  String
+  walk       Int
+  video      String
+  image      String
   attributes Attribute[]
 }
 
 model Attribute {
-  id    Int     @id @default(autoincrement())
-  walk Walk @relation(fields: [walkId], references: [id])
+  id     Int     @id @default(autoincrement())
+  walk   Walk    @relation(fields: [walkId], references: [id])
   walkId Int
-  score Float
+  scores Score[]
 }
 
 model Score {
-  id    Int     @id @default(autoincrement())
-  index Int
-  score Float
+  id          Int       @id @default(autoincrement())
+  attribute   Attribute @relation(fields: [attributeId], references: [id])
+  attributeId Int
+  index       Int
+  score       Float
 }
-
