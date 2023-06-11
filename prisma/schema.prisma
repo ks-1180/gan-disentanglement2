@@ -15,8 +15,8 @@ model Walk {
   space      String
   direction  String
   walk       Int
-  video      String
-  image      String
+  start       Float
+  end         Float
   attributes Attribute[]
 }
 
@@ -24,13 +24,14 @@ model Attribute {
   id     Int     @id @default(autoincrement())
   walk   Walk    @relation(fields: [walkId], references: [id])
   walkId Int
-  scores Score[]
+  name String
+  steps Step[]
 }
 
-model Score {
+model Step {
   id          Int       @id @default(autoincrement())
   attribute   Attribute @relation(fields: [attributeId], references: [id])
   attributeId Int
-  index       Int
+  intensity   Float
   score       Float
 }
