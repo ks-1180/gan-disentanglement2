@@ -226,7 +226,7 @@ const RadarChart = ({direction, walk}) => {
     //   d3.csv(path).then((data) => {
     //     setData(data);
     //     setIsDataLoaded(true);
-    //     localStorage.setItem(direction.value, JSON.stringify)
+    //     localStorage.setItem(direction.value, JSON.stringify(data))
     //   });
     // }
   }, [direction]);

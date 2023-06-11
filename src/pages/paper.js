@@ -17,6 +17,7 @@ import { UmapDisplay } from "@component/components/umapDisplay";
 import RegressionScatterplot from "@component/components/regressionScatterplot";
 import Copyright from "@component/components/copyright";
 import { useRouter } from "next/router";
+import { LineChartDisplay } from "@component/components/lineChartDisplay";
 
 
 export default function PaperPage() {
@@ -50,9 +51,9 @@ export default function PaperPage() {
               >
                 <CardMedia component="img" image={path} alt="s" />
                 <CardContent sx={{ flexGrow: 1 }}>
-                  <Stack direction={'row'} spacing={3}>
+                  <Stack direction={'row'} justifyContent={'space-between'}>
                     <FilterDialog direction={direction} setDirection={setDirection} />
-                    <Button variant="contained" onClick={()=>{router.push(`paper/${direction.value}/${walk}`)}}>Details</Button>
+                    <Button variant="contained" onClick={()=>{router.push(`paper/${direction.value}/${walk}`)}}>Explore Single Walk</Button>
                   </Stack>
                 </CardContent>
               </Card>
@@ -68,6 +69,7 @@ export default function PaperPage() {
               </Grid>
             </Grid>
             <Grid item xs={12} sm={12} md={6}>
+                <LineChartDisplay direction={direction} />
             </Grid>
           </Grid>
         </Container>
