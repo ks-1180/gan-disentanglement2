@@ -214,21 +214,21 @@ const RadarChart = ({direction, walk}) => {
   }, [data, walk, direction]);
 
   useEffect(() => {
-    console.log("radar: ", direction.value);
-    //get walk data TODO: change key to something more unique
-    const localData = localStorage.getItem(direction.value);
-    setIsDataLoaded(false)
-    if (false) {
-        setData(JSON.parse(localData));
-        setIsDataLoaded(true);
-    } else {
-      const path = `/radar/${direction.value}.csv`;
-      d3.csv(path).then((data) => {
-        setData(data);
-        setIsDataLoaded(true);
-        localStorage.setItem(direction.value, JSON.stringify)
-      });
-    }
+    // console.log("radar: ", direction.value);
+    // //get walk data TODO: change key to something more unique
+    // const localData = localStorage.getItem(direction.value);
+    // setIsDataLoaded(false)
+    // if (false) {
+    //     setData(JSON.parse(localData));
+    //     setIsDataLoaded(true);
+    // } else {
+    //   const path = `/radar/${direction.value}.csv`;
+    //   d3.csv(path).then((data) => {
+    //     setData(data);
+    //     setIsDataLoaded(true);
+    //     localStorage.setItem(direction.value, JSON.stringify)
+    //   });
+    // }
   }, [direction]);
 
   return (

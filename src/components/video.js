@@ -11,11 +11,11 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useRef } from 'react';
 
-export default function VideoCard() {
+export default function VideoCard({path}) {
     const [value, setValue] = useState(0);
     const videoRef = useRef(null);
 
-    const video_path = `/videos/w/Black_Hair/0.mp4`;
+    const video_path = path;
 
     useEffect(() => {
         const video = videoRef.current;
