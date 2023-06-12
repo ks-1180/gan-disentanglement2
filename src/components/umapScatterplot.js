@@ -14,7 +14,6 @@ const generateScatterplot = (ref, data, walk, handleClick) => {
     d3.select(ref.current).selectAll("svg").remove();
 
     // create scales for the x and y axes
-    console.log(data);
     const xScale = d3
         .scaleLinear()
         //.domain([0, d3.max(data, (d) => d[0])])
@@ -67,7 +66,6 @@ const Scatterplot = ({direction, walk, setWalk}) => {
 
     const handleClick = (event, d) => {
       // your code to handle click event
-      console.log("Click:", d);
       setWalk(d.walk);
     };
 
@@ -76,16 +74,13 @@ const Scatterplot = ({direction, walk, setWalk}) => {
     }, [data, walk]);
 
     useEffect(() => {
-        console.log('umap: ', direction.value)
         setIsDataLoaded(false);
         const localData = localStorage.getItem(direction.value);
-        console.log('localData', localData);
         if (false) {
             setData(JSON.parse(localData));
             setIsDataLoaded(true);
         } else {
             const path = `/umap/${direction.value}.csv`;
-            console.log(path);
             d3.csv(path).then((data) => {
                 setData(data);
                 setIsDataLoaded(true);

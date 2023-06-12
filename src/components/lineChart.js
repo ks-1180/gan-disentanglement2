@@ -89,8 +89,6 @@ const generateLineChart = (ref, data, slopes, attribute) => {
 
     // generate Bar Chart
 
-    console.log('slopes', slopesValues);
-
     const extent = d3.extent(slopesValues);
     const maxAbsVal = Math.max(Math.abs(extent[0]), Math.abs(extent[1]));
 
@@ -99,8 +97,6 @@ const generateLineChart = (ref, data, slopes, attribute) => {
     const bins = d3.bin()
         .domain([-maxAbsVal, maxAbsVal])
         .thresholds(thresholds)(slopesValues);
-
-    console.log('bins', bins);
 
     const xBarScale = d3
         .scaleLinear()
@@ -168,19 +164,15 @@ export function LineChart({direction, attribute}) {
     // generate line chart after data is loaded
     useEffect(() => {
         if(isDataLoaded == true) {
-            console.log("data: ",data);
             generateLineChart(chartRef, data, slopes, attribute);
         }
     }, [data, slopes, attribute]);
 
     useEffect(() => {
-        console.log("direction", direction.value);
         const path = `/radar/${direction.value}.csv`;
         d3.csv(path).then((data) => {
             setData(data);
-            console.log("my data;", data)
             setIsDataLoaded(true);
-
         });
 
         const path2 = `/regression/${attribute}.csv`

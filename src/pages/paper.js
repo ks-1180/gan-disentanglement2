@@ -18,6 +18,8 @@ import RegressionScatterplot from "@component/components/regressionScatterplot";
 import Copyright from "@component/components/copyright";
 import { useRouter } from "next/router";
 import { LineChartDisplay } from "@component/components/lineChartDisplay";
+import { useEffect } from "react";
+import useWalks from "../stores/walks"
 
 
 export default function PaperPage() {
@@ -25,8 +27,16 @@ export default function PaperPage() {
   const [direction, setDirection] = useState({ label: 'Eyeglasses', value: 'Eyeglasses' });
   const [walk, setWalk] = useState(0);
   const router = useRouter();
-
   const path = `/walks/${direction.value}/${walk}.jpg`;
+
+  const getWalks = useWalks(state=>state.getWalks);
+  const walks = useWalks(state=>state.walks)
+  console.log(walks);
+
+  useEffect(() => {
+    // You can replace 'spaceValue' and 'directionValue' with the actual values you want to use
+    getWalks('w', direction.value);
+  }, [direction]);
 
   return (
     <>
@@ -53,6 +63,7 @@ export default function PaperPage() {
                 <CardContent sx={{ flexGrow: 1 }}>
                   <Stack direction={'row'} justifyContent={'space-between'}>
                     <FilterDialog direction={direction} setDirection={setDirection} />
+                    
                     <Button variant="contained" onClick={()=>{router.push(`paper/${direction.value}/${walk}`)}}>Explore Single Walk</Button>
                   </Stack>
                 </CardContent>
