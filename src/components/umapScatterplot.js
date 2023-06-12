@@ -47,17 +47,18 @@ const generateScatterplot = (ref, data, selectedWalks, setSelectedWalks) => {
     // click event listener
     const handleClick = (event, d) => {
         // reset selection and add current walk
-        console.log("Click:", d)
         setSelectedWalks([d.walk]);
 
+        // color reset
         svg
             .selectAll('.scatterplot-circle')
-            .attr('fill', "#009688");
-
-        d3.select(event.currentTarget)
-            .attr('fill', "#f44336");
-
+            .attr('fill', d => (selectedWalks.includes(d.walk) ? "#f44336" : "#009688"));
         
+        //TODO: check if needed
+        d3.select(event.currentTarget)
+            .attr('fill', "#f44336")
+
+        console.log("Click:", d)
     }
 
     // add circles
@@ -70,8 +71,8 @@ const generateScatterplot = (ref, data, selectedWalks, setSelectedWalks) => {
         .attr("cy", (d) => yScale(+d.y))
         .attr("r", 4)
         .attr("fill", (d) => (selectedWalks.includes(d.walk) ? "#f44336" : "#009688")) // Change fill color based on condition
-        .attr("class", "scatterplot-circle")
-        //.on("click", handleClick);
+        .on("click", handleClick)
+        .attr("class", "scatterplot-circle");
 
     g.append("g").attr("transform", `translate(0,${height})`).call(xAxis);
 
@@ -100,7 +101,6 @@ const generateScatterplot = (ref, data, selectedWalks, setSelectedWalks) => {
                 .style('fill', 'none')
                 .style('stroke', '#d4d4d4')
                 .style('stroke-width', '2px');
-            d3.select(this).attr('pointer-events', 'none');
         })
         .on('drag', function(event) {
             const rect = walkSelection.select('.selection-rect');
@@ -117,32 +117,17 @@ const generateScatterplot = (ref, data, selectedWalks, setSelectedWalks) => {
             const rect = walkSelection.select('.selection-rect');
             const [rectStartX, rectStartY, rectWidth, rectHeight] = [+rect.attr('x'), +rect.attr('y'), +rect.attr('width'), +rect.attr('height')];
             rect.remove();
-            if (rectWidth < 10 && rectHeight < 10) {
-                // This was a click, not a drag. Handle it here
-                const [mouseX, mouseY] = d3.pointer(event);
-                const elements = document.elementsFromPoint(mouseX, mouseY);
-                for(let i = 0; i < elements.length; i++){
-                    let clickedData = d3.select(elements[i]).data()[0];
-                    if(clickedData){
-                        handleClick(event, clickedData);
-                        break;
-                    }
-                }
-            } else {
-                // This was a drag. Handle the selection here
-                const selected = data.filter(d => {
-                    const [x, y] = [xScale(+d.x), yScale(+d.y)];
-                    return rectStartX <= x && x <= rectStartX + rectWidth && rectStartY <= y && y <= rectStartY + rectHeight;
-                });
-        
-                setSelectedWalks(selected.map(d => d.walk));
-        
-                svg.selectAll('.scatterplot-circle')
-                    .attr('fill', d => (selected.includes(d) ? "#f44336" : "#009688"));
-        
-                console.log("Selected", selected); // TODO: do something with the selection
-            }
-            d3.select(this).attr('pointer-events', null);
+            const selected = data.filter(d => {
+                const [x, y] = [xScale(+d.x), yScale(+d.y)];
+                return rectStartX <= x && x <= rectStartX + rectWidth && rectStartY <= y && y <= rectStartY + rectHeight;
+            });
+
+            setSelectedWalks(selected.map(d => d.walk));
+
+            svg.selectAll('.scatterplot-circle')
+                .attr('fill', d => (selectedWalks.includes(d.walk) ? "#f44336" : "#009688"));
+
+            console.log("Selected", selected); // TODO: do something with the selection
         });
     svg.call(drag);
 };
