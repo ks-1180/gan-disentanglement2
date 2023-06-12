@@ -15,9 +15,9 @@ export function LineChartDisplay(props) {
         "Brown_Hair",
         "Bushy_Eyebrows",
         "Chubby", // 10
-        /*"Double_Chin",
+        "Double_Chin",
         "Eyeglasses",
-        "Goatee",
+        /*"Goatee",
         "Grey_Hair",
         "Heavy_Makeup",
         "High_Cheekbones",
@@ -43,7 +43,7 @@ export function LineChartDisplay(props) {
                 height: "100%",
                 width: "100%",
                 display: "flex",
-                flexDirection: "column"
+                flexDirection: "column",
             }}
         >
             <CardContent 

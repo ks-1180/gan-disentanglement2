@@ -14,30 +14,38 @@ const generateLineChart = (ref, data, slopes, attribute) => {
 
     const flattenWalks = walks.flat();
 
-    console.log('here comes the line data:', walks)
-    console.log('one walk: ', walks[0])
+    const slopesValues = slopes.map((d) => +d.slope);
 
     const container = d3.select(ref.current)
 
     container.select('svg').remove();
 
-    const margin = { top: 40, right: 10, bottom: 0, left: 10 };
-    const width = container.node().clientWidth;
+    const margin = { top: 40, right: 40, bottom: 0, left: 10 };
+    const width = container.node().clientWidth - margin.right;
     const height = container.node().clientHeight;
 
     // line chart settings
-    const lineChartWidth = width * 0.6 - margin.left - margin.right;
+    const lineChartWidth = width * 0.7 - margin.left;
     const innerWidth = lineChartWidth - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
     // bar chart settings
-    const barChartWidth = width * 0.4 - margin.left - margin.right;
-    const barChartHeight = innerHeight;
+    const barChartWidth = width * 0.3 - margin.left;
+    const barChartHeight = height;
 
     const svg = container
         .append('svg')
         .attr('width', width)
         .attr('height', height);
+
+    // add border
+    svg
+        .append('rect')
+        .attr('width', width)
+        .attr('height', height)
+        .attr('fill', 'none')
+        .attr('stroke', 'grey')
+        .attr('stroke-width', 1);
 
     // add title
     svg
@@ -57,7 +65,7 @@ const generateLineChart = (ref, data, slopes, attribute) => {
     const yScale = d3
         .scaleLinear()
         .domain([-1, 1])
-        .range([innerHeight, margin.top]);
+        .range([180, margin.top]);
 
     /* svg.append('g')
         .attr('transform', `translate(${margin.left}, 0)`)
@@ -81,37 +89,53 @@ const generateLineChart = (ref, data, slopes, attribute) => {
 
     // generate Bar Chart
 
-    const transposedData = d3.transpose(walks.map((walk) => walk.map((d) => d.value)));
-    const meanValues = transposedData.map((column) => d3.mean(column));
-    console.log('means: ',meanValues);
+    console.log('slopes', slopesValues);
+
+    const extent = d3.extent(slopesValues);
+    const maxAbsVal = Math.max(Math.abs(extent[0]), Math.abs(extent[1]));
+
+    const thresholds = d3.range(-4, 5, 1).map(d => d * maxAbsVal / 4);
+
+    const bins = d3.bin()
+        .domain([-maxAbsVal, maxAbsVal])
+        .thresholds(thresholds)(slopesValues);
+
+    console.log('bins', bins);
 
     const xBarScale = d3
-        .scaleBand()
-        .domain(d3.range(meanValues.length))
-        .range([0, barChartWidth])
-        .padding(0.2);
+        .scaleLinear()
+        .domain([-maxAbsVal, maxAbsVal])
+        .range([0, barChartWidth]);
 
     const yBarScale = d3
         .scaleLinear()
-        .domain([-1, 1])
-        .range([barChartHeight, 0]);
+        //.domain([-1, 1])
+        .domain([0, d3.max(bins, d => d.length)])
+        .range([barChartHeight, margin.top]);
 
     const barChartContainer = svg
         .append('g')
         .attr('class', 'bar-chart-container')
-        .attr('transform', `translate(${lineChartWidth}, 0)`);
+        .attr('transform', `translate(${lineChartWidth + margin.left}, 0)`);
     
     barChartContainer
         .selectAll('rect')
-        .data(meanValues)
+        .data(bins)
         .enter()
         .append("rect")
-        .attr("x", (d, i) => xBarScale(i))
-        .attr("y", d => d > 0 ? yBarScale(d) : yBarScale(0)) 
-        .attr("height", d => Math.abs(yBarScale(d) - yBarScale(0)))
-        .attr("width", xBarScale.bandwidth())
-        .attr('fill', (d) => (d > 0 ? '#009688' : '#d4d4d4'));
+        .attr("x", d => xBarScale(d.x0))
+        .attr("y", d => yBarScale(d.length)) 
+        .attr("height", d => barChartHeight - yBarScale(d.length))
+        .attr("width", d => xBarScale(d.x1) - xBarScale(d.x0) - 1)
+        .attr('fill', d => (d.x0 >= 0 ? '#009688' : '#d4d4d4'));
 
+    svg.append("line")
+        .attr("x1", lineChartWidth)  // x position of the first end of the line
+        .attr("y1", 0)  // y position of the first end of the line
+        .attr("x2", lineChartWidth)  // x position of the second end of the line
+        .attr("y2", height)    // y position of the second end of the line
+        .attr("stroke-width", 1)
+        .attr("stroke", "#d4d4d4");
 
     /*const walk = [
         { time: 0, value: 3.182290674885735e-05 },
@@ -145,9 +169,9 @@ export function LineChart({direction, attribute}) {
     useEffect(() => {
         if(isDataLoaded == true) {
             console.log("data: ",data);
-            generateLineChart(chartRef, data, attribute);
+            generateLineChart(chartRef, data, slopes, attribute);
         }
-    }, [data, attribute]);
+    }, [data, slopes, attribute]);
 
     useEffect(() => {
         console.log("direction", direction.value);
@@ -159,7 +183,7 @@ export function LineChart({direction, attribute}) {
 
         });
 
-        const path2 = `/regression/${direction.value}.csv`
+        const path2 = `/regression/${attribute}.csv`
         d3.csv(path2).then((slopes) => {
             setSlopes(slopes);
             setIsDataLoaded(true);
@@ -168,6 +192,6 @@ export function LineChart({direction, attribute}) {
     }, [direction]);
 
     return (
-        <svg viewBox={'0 0' + 1200 + " " + 400} ref={chartRef}/>
+        <svg viewBox={'0 0' + 800 + " " + 400} style={{width: '300px', height: '110px'}} ref={chartRef}/>
     );
 };
