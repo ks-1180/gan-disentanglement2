@@ -3,14 +3,13 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default async (req, res) => {
-  const { space, direction, walk } = req.query;
+  const { space, direction } = req.query;
 
   try {
     const walks = await prisma.walk.findMany({
       where: {
         space: space,
         direction: direction,
-        walk: Number(walk),
       },
       include: {
         attributes: {

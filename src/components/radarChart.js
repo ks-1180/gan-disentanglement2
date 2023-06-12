@@ -208,7 +208,6 @@ const RadarChart = ({direction, walk}) => {
 
   useEffect(() => {
     if (isDataLoaded == true) {
-      console.log(data)
       generateRadarChart2(chartRef, data, walk, direction.value);
     }
   }, [data, walk, direction]);

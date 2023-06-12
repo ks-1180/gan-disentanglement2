@@ -29,13 +29,12 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
     // Fetch necessary data for the walk using params.walkId and params.direction
-    console.log(params);
     const prisma = new PrismaClient();
     const direction= params.direction
     const walk = params.walk
     const space = params.space
 
-    const walks = await prisma.walk.findMany({
+    const walks = await prisma.Walk.findMany({
         where: {
             space: space,
             direction: direction,
@@ -65,8 +64,6 @@ const Walk = ({ space, direction, walk, walks }) => {
         // This will be displayed while waiting for getStaticProps to finish
         return <div>Loading...</div>
     }
-    console.log(walks);
-    console.log(space, direction, walk);
 
     const path = `/walks/${direction}/${walk}.jpg`;
     return (
