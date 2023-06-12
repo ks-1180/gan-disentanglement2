@@ -88,7 +88,7 @@ const generateScatterplot = (ref, data, selectedWalks, setSelectedWalks) => {
         .attr("height", height)
         .attr("fill", "transparent");
 
-    const drag = d3.drag()
+        const drag = d3.drag()
         .on('start', function(event) {
             console.log("start")
             const [x, y] = d3.pointer(event, g.node());
@@ -117,18 +117,37 @@ const generateScatterplot = (ref, data, selectedWalks, setSelectedWalks) => {
             const rect = walkSelection.select('.selection-rect');
             const [rectStartX, rectStartY, rectWidth, rectHeight] = [+rect.attr('x'), +rect.attr('y'), +rect.attr('width'), +rect.attr('height')];
             rect.remove();
-            const selected = data.filter(d => {
-                const [x, y] = [xScale(+d.x), yScale(+d.y)];
-                return rectStartX <= x && x <= rectStartX + rectWidth && rectStartY <= y && y <= rectStartY + rectHeight;
-            });
-
-            setSelectedWalks(selected.map(d => d.walk));
-
-            svg.selectAll('.scatterplot-circle')
-                .attr('fill', d => (selectedWalks.includes(d.walk) ? "#f44336" : "#009688"));
-
-            console.log("Selected", selected); // TODO: do something with the selection
+    
+            // If there was no movement in 'drag', this was a click
+            if (rectWidth === 0 && rectHeight === 0) {
+                const [x, y] = [rectStartX, rectStartY];
+                const clickedData = data.find(d => {
+                    const [px, py] = [xScale(+d.x), yScale(+d.y)];
+                    return Math.hypot(px - x, py - y) <= 4;  // 4 is the circle radius
+                });
+    
+                if (clickedData) {
+                    handleClick(event, clickedData);
+                }
+            } else {
+                const selected = data.filter(d => {
+                    const [x, y] = [xScale(+d.x), yScale(+d.y)];
+                    return rectStartX <= x && x <= rectStartX + rectWidth && rectStartY <= y && y <= rectStartY + rectHeight;
+                });
+    
+                if (!selected.length) {
+                    setSelectedWalks([1]);
+                } else {
+                    setSelectedWalks(selected.map(d => d.walk));
+                }
+    
+                svg.selectAll('.scatterplot-circle')
+                    .attr('fill', d => (selectedWalks.includes(d.walk) ? "#f44336" : "#009688"));
+    
+                console.log("Selected", selected); // TODO: do something with the selection
+            }
         });
+    
     svg.call(drag);
 };
 
