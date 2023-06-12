@@ -14,7 +14,27 @@ export function LineChartDisplay(props) {
         "Blond_Hair",
         "Brown_Hair",
         "Bushy_Eyebrows",
-        "Chubby"
+        "Chubby", // 10
+        /*"Double_Chin",
+        "Eyeglasses",
+        "Goatee",
+        "Grey_Hair",
+        "Heavy_Makeup",
+        "High_Cheekbones",
+        "Male",
+        "Mouth_Slightly_Open",
+        "Mustache",
+        "No_Beard",
+        "Pale_Skin",
+        "Receding_Hairline",
+        "Sideburns",
+        "Smiling",
+        "Straight_Hair",
+        "Wavy_Hair",
+        "Wearing_Earrings",
+        "Wearing_Hat",
+        "Wearing_Lipstick",
+        "Young"*/
     ]
 
     return (
@@ -31,7 +51,6 @@ export function LineChartDisplay(props) {
                     flexGrow: 1,
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-                    gap: '20px'
                 }}>
                 {attributes.map((attribute, index) => (
                     <div key={index}>

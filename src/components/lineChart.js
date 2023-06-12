@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 
-const generateLineChart = (ref, data, attribute) => {
+const generateLineChart = (ref, data, slopes, attribute) => {
     const walks = data.map((row) => {
         const walk = [];
         Object.keys(row).forEach((key) => {
@@ -21,11 +21,18 @@ const generateLineChart = (ref, data, attribute) => {
 
     container.select('svg').remove();
 
+    const margin = { top: 40, right: 10, bottom: 0, left: 10 };
     const width = container.node().clientWidth;
     const height = container.node().clientHeight;
-    const margin = { top: 20, right: 20, bottom: 30, left: 40 };
-    const innerWidth = width - margin.left - margin.right;
+
+    // line chart settings
+    const lineChartWidth = width * 0.6 - margin.left - margin.right;
+    const innerWidth = lineChartWidth - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
+
+    // bar chart settings
+    const barChartWidth = width * 0.4 - margin.left - margin.right;
+    const barChartHeight = innerHeight;
 
     const svg = container
         .append('svg')
@@ -44,12 +51,12 @@ const generateLineChart = (ref, data, attribute) => {
     const xScale = d3
         .scaleLinear()
         .domain([0, 9])
-        .range([margin.left, innerWidth]);
+        .range([margin.left, lineChartWidth]);
 
     const yValues = flattenWalks.map((d) => d.value);
     const yScale = d3
         .scaleLinear()
-        .domain([0, 1])
+        .domain([-1, 1])
         .range([innerHeight, margin.top]);
 
     /* svg.append('g')
@@ -71,6 +78,40 @@ const generateLineChart = (ref, data, attribute) => {
             .attr('stroke-width', 0.5)
             .attr('d', line);
     });
+
+    // generate Bar Chart
+
+    const transposedData = d3.transpose(walks.map((walk) => walk.map((d) => d.value)));
+    const meanValues = transposedData.map((column) => d3.mean(column));
+    console.log('means: ',meanValues);
+
+    const xBarScale = d3
+        .scaleBand()
+        .domain(d3.range(meanValues.length))
+        .range([0, barChartWidth])
+        .padding(0.2);
+
+    const yBarScale = d3
+        .scaleLinear()
+        .domain([-1, 1])
+        .range([barChartHeight, 0]);
+
+    const barChartContainer = svg
+        .append('g')
+        .attr('class', 'bar-chart-container')
+        .attr('transform', `translate(${lineChartWidth}, 0)`);
+    
+    barChartContainer
+        .selectAll('rect')
+        .data(meanValues)
+        .enter()
+        .append("rect")
+        .attr("x", (d, i) => xBarScale(i))
+        .attr("y", d => d > 0 ? yBarScale(d) : yBarScale(0)) 
+        .attr("height", d => Math.abs(yBarScale(d) - yBarScale(0)))
+        .attr("width", xBarScale.bandwidth())
+        .attr('fill', (d) => (d > 0 ? '#009688' : '#d4d4d4'));
+
 
     /*const walk = [
         { time: 0, value: 3.182290674885735e-05 },
@@ -97,6 +138,7 @@ export function LineChart({direction, attribute}) {
     const chartRef = useRef();
 
     const [data, setData] = useState([]);
+    const [slopes, setSlopes] = useState([]);
     const [isDataLoaded, setIsDataLoaded] = useState([false]);
 
     // generate line chart after data is loaded
@@ -116,10 +158,16 @@ export function LineChart({direction, attribute}) {
             setIsDataLoaded(true);
 
         });
+
+        const path2 = `/regression/${direction.value}.csv`
+        d3.csv(path2).then((slopes) => {
+            setSlopes(slopes);
+            setIsDataLoaded(true);
+        });
         
     }, [direction]);
 
     return (
-        <svg viewBox={'0 0' + 600 + " " + 400} ref={chartRef}/>
+        <svg viewBox={'0 0' + 1200 + " " + 400} ref={chartRef}/>
     );
 };
