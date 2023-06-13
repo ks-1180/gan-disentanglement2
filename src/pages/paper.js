@@ -30,9 +30,10 @@ import FormLabel from '@mui/material/FormLabel';
 export default function PaperPage() {
 
   const [direction, setDirection] = useState({ label: 'Eyeglasses', value: 'Eyeglasses' });
-  const [walk, setWalk] = useState(0);
+  const [walk, setWalk] = useState([1]);
   const router = useRouter();
-  const path = `/walks/${direction.value}/${walk}.jpg`;
+
+  const path = `/walks/${direction.value}/${walk[0]}.jpg`;
 
   const getWalks = useWalks(state => state.setSpace);
   const walks = useWalks(state => state.walks);
@@ -79,7 +80,7 @@ export default function PaperPage() {
                   flexDirection: "column",
                 }}
               >
-                <CardMedia component="img" image={path} alt="s" />
+                <CardMedia component="img" image={path} alt="walk" />
                 <CardContent sx={{ flexGrow: 1 }}>
                   <Stack direction={'row'} justifyContent={'space-between'}>
                     <FilterDialog direction={direction} setDirection={setDirection} />
@@ -104,7 +105,7 @@ export default function PaperPage() {
             <Grid item xs={12} sm={12} md={6}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <UmapDisplay direction={direction} walk={walk} setWalk={setWalk} />
+                  <UmapDisplay direction={direction} selectedWalks={walk} setSelectedWalks={setWalk} />
                 </Grid>
                 <Grid item xs={12}>
                   <RegressionScatterplot direction={direction} walk={walk} setWalk={setWalk} />
