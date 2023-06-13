@@ -6,6 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContentText from "@mui/material/DialogContentText";
 import { Box, Chip, Divider, Grid, Typography } from "@mui/material";
+import useWalks from "../stores/walks";
 
 const generalAtt = [
   { label: "Male", value: "Male" },
@@ -49,6 +50,8 @@ const accessoiresAtt = [
 export function FilterDialog({ direction, setDirection }) {
   const [open, setOpen] = React.useState(false);
 
+  const setDirection2 = useWalks(state=>state.setDirection);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -59,6 +62,7 @@ export function FilterDialog({ direction, setDirection }) {
 
   const handleChipClick = (attribute) => {
     setDirection(attribute);
+    setDirection2(attribute.value);
   };
 
   const descriptionElementRef = React.useRef(null);

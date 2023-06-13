@@ -19,8 +19,13 @@ import Copyright from "@component/components/copyright";
 import { useRouter } from "next/router";
 import { LineChartDisplay } from "@component/components/lineChartDisplay";
 import { useEffect } from "react";
-import useWalks from "../stores/walks"
+import useWalks from "../stores/walks";
 
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 
 export default function PaperPage() {
 
@@ -29,9 +34,24 @@ export default function PaperPage() {
   const router = useRouter();
   const path = `/walks/${direction.value}/${walk}.jpg`;
 
-  const getWalks = useWalks(state=>state.getWalks);
-  const walks = useWalks(state=>state.walks)
+  const getWalks = useWalks(state => state.setSpace);
+  const walks = useWalks(state => state.walks);
+
+  const space = useWalks(state=>state.space);
+  const direction2 = useWalks(state=>state.direction);
+  const loading = useWalks(state=>state.loading);
+  const error = useWalks(state=>state.error);
+  const errorMessage = useWalks(state=>state.errorMessage);
+
+
+  const setSpace = useWalks(state=>state.setSpace);
+
+  console.log(space, direction2, loading, error, errorMessage);
   console.log(walks);
+
+  const handleSpaceChange = (event) => {
+    setSpace(event.target.value);
+  };
 
   useEffect(() => {
     // You can replace 'spaceValue' and 'directionValue' with the actual values you want to use
@@ -63,8 +83,20 @@ export default function PaperPage() {
                 <CardContent sx={{ flexGrow: 1 }}>
                   <Stack direction={'row'} justifyContent={'space-between'}>
                     <FilterDialog direction={direction} setDirection={setDirection} />
-                    
-                    <Button variant="contained" onClick={()=>{router.push(`paper/${direction.value}/${walk}`)}}>Explore Single Walk</Button>
+                    <FormControl>
+                      <RadioGroup
+                        row
+                        aria-labelledby="demo-row-radio-buttons-group-label"
+                        name="row-radio-buttons-group"
+                        defaultValue={'z'}
+                        value={space}
+                        onChange={handleSpaceChange}
+                      >
+                        <FormControlLabel value="z" control={<Radio />} label="latent space (z)" />
+                        <FormControlLabel value="w" control={<Radio />} label="style space (w)" />
+                      </RadioGroup>
+                    </FormControl>
+                    <Button variant="contained" onClick={() => { router.push(`paper/${direction.value}/${walk}`) }}>Explore Single Walk</Button>
                   </Stack>
                 </CardContent>
               </Card>
@@ -80,7 +112,7 @@ export default function PaperPage() {
               </Grid>
             </Grid>
             <Grid item xs={12} sm={12} md={6}>
-                <LineChartDisplay direction={direction} />
+              <LineChartDisplay direction={direction} />
             </Grid>
           </Grid>
         </Container>

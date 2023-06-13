@@ -3,7 +3,10 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default async (req, res) => {
-  const { space, direction } = req.query;
+  const { space, direction, page, limit } = req.query;
+
+  // calculate how many records to skip
+  const skip = page > 1 ? (page - 1) * limit : 0;
 
   try {
     const walks = await prisma.walk.findMany({
@@ -22,6 +25,8 @@ export default async (req, res) => {
           },
         },
       },
+      skip: parseInt(skip),
+      take: parseInt(limit),
     });
 
     res.status(200).json(walks);
