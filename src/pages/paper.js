@@ -35,8 +35,10 @@ export default function PaperPage() {
 
   const path = `/walks/${direction.value}/${walk[0]}.jpg`;
 
-  const getWalks = useWalks(state => state.setSpace);
   const walks = useWalks(state => state.walks);
+
+  const setSpace = useWalks(state=>state.setSpace);
+  const setSpaceAndDirection = useWalks(state=>state.setSpaceAndDirection);
 
   const space = useWalks(state=>state.space);
   const direction2 = useWalks(state=>state.direction);
@@ -44,11 +46,8 @@ export default function PaperPage() {
   const error = useWalks(state=>state.error);
   const errorMessage = useWalks(state=>state.errorMessage);
 
-
-  const setSpace = useWalks(state=>state.setSpace);
-
-  console.log(space, direction2, loading, error, errorMessage);
   console.log(walks);
+
 
   const handleSpaceChange = (event) => {
     setSpace(event.target.value);
@@ -56,8 +55,8 @@ export default function PaperPage() {
 
   useEffect(() => {
     // You can replace 'spaceValue' and 'directionValue' with the actual values you want to use
-    getWalks('w', direction.value);
-  }, [direction]);
+    setSpaceAndDirection(space, direction.value);
+  }, []);
 
   return (
     <>

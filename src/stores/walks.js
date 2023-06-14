@@ -3,7 +3,6 @@ import { produce } from "immer";
 import * as simpleStatistics from "simple-statistics";
 
 const calculateLinearRegressions = (walk) => {
-  console.log('start linear regression');
   walk.attributes.forEach((attribute) => {
     const scores = attribute.steps;
     const steps = scores.map((score, index) => [index - 5, score]);
