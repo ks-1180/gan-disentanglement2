@@ -32,7 +32,6 @@ export default function PaperPage() {
 
   const getWalks = useWalks(state=>state.getWalks);
   const walks = useWalks(state=>state.walks)
-  console.log(walks);
 
   useEffect(() => {
     // You can replace 'spaceValue' and 'directionValue' with the actual values you want to use
