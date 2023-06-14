@@ -4,27 +4,49 @@ import { csv } from "d3-fetch"
 import Paper from "@mui/material/Paper";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import useWalk from "@component/stores/walk";
+import useWalks from "@component/stores/walks";
 
-const generateScatterplot = (ref, data, walk, handleClick) => {
+const generateScatterplot = (ref, walks, selectedWalks) => {
     const margin = { top: 20, right: 60, bottom: 30, left: 40 };
     const width = 600 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
 
     d3.select(ref.current).selectAll("svg").remove();
 
+    let data = [];
+    // Iterate over each object in the array
+    walks.forEach(item => {
+        let walk = item.walk;
+        // Further iterate over the 'attributes' array inside each object
+        item.attributes.forEach(attr => {
+            let newObject = {
+                'walk': walk,
+                'slope': attr.slope,
+                'intercept': attr.intercept,
+                'r2': attr.r2
+            };
+            data.push(newObject);
+        });
+    });
+    console.log(data);
+
+
     // create scales for the x and.slope axes
+    const minX = d3.min(data, d => +d.r2);
+    const maxX = d3.max(data, d => +d.r2);
+
+    const minY = d3.min(data, d => +d.slope);
+    const maxY = d3.max(data, d => +d.slope);
+
     const xScale = d3
         .scaleLinear()
-        //.domain([0, d3.max(data, (d) => d[0])])
-        //.range([0, width]);
-        .domain([d3.min(data, d => +d.r_value), d3.max(data, d => +d.r_value)])
+        .domain([minX-(maxX-minX)*0.1, maxX+(maxX-minX)*0.1])
         .range([0, width]);
 
     const yScale = d3
         .scaleLinear()
-        //.domain([0, d3.max(data, (d) => d[1])])
-        //.range([height, 0]);
-        .domain([d3.min(data, d => +d.slope), d3.max(data, d => +d.slope)])
+        .domain([minY-(maxY-minY)*0.1, maxY+(maxY-minY)*0.1])
         .range([height, 0]);
 
     // create the x and.slope axes
@@ -45,11 +67,10 @@ const generateScatterplot = (ref, data, walk, handleClick) => {
         .data(data)
         .enter()
         .append("circle")
-        .attr("cx", (d) => xScale(+d.r_value))
+        .attr("cx", (d) => xScale(+d.r2))
         .attr("cy", (d) => yScale(+d.slope))
         .attr("r", 4)
-        .attr("fill", (d) => (d.walk === walk ? "#f44336" : "#009688")) // Change fill color based on condition
-        .on("click", handleClick)
+        .attr("fill", (d) => (selectedWalks.includes(d.walk) ? "#f44336" : "#009688")) // Change fill color based on condition
         .attr("class", "scatterplot-circle");
 
     svg.append("g").attr("transform", `translate(0,${height})`).call(xAxis);
@@ -57,37 +78,23 @@ const generateScatterplot = (ref, data, walk, handleClick) => {
     svg.append("g").call(yAxis);
 };
 
-const RegressionScatterplot = ({ direction, walk, setWalk }) => {
+const RegressionScatterplot = () => {
     const chartRef = useRef();
 
-    const [data, setData] = useState([]);
-    const [isDataLoaded, setIsDataLoaded] = useState(false);
+    const walks = useWalks(state => state.walks);
+    const selectedWalks = useWalks(state => state.selectedWalks);
+
+    // const [data, setData] = useState([]);
+    // const [isDataLoaded, setIsDataLoaded] = useState(false);
 
     const handleClick = (event, d) => {
         // your code to handle click event
-        setWalk(d.walk);
+        // setWalk(d.walk);
     };
 
     useEffect(() => {
-        generateScatterplot(chartRef, data, walk, handleClick);
-    }, [data, walk]);
-
-    useEffect(() => {
-        const localData = localStorage.getItem(direction.value);
-        setIsDataLoaded(false);
-        if (false) {
-            setData(JSON.parse(localData));
-            setIsDataLoaded(true);
-        } else {
-            const path = `/regression/${direction.value}.csv`;
-            d3.csv(path).then((data) => {
-                setData(data);
-                setIsDataLoaded(true);
-                localStorage.setItem(direction.value, JSON.stringify(data));
-            });
-        }
-        setIsDataLoaded(true);
-    }, [direction]);
+        generateScatterplot(chartRef, walks, selectedWalks);
+    }, [walks, selectedWalks]);
 
     return (
         <>
@@ -99,13 +106,9 @@ const RegressionScatterplot = ({ direction, walk, setWalk }) => {
                 }}
             >
                 <CardContent sx={{ flexGrow: 1 }}>
-                    {isDataLoaded ? (
-                        <svg
-                            viewBox={"0 0 " + 600 + " " + 400}
-                            ref={chartRef} />
-                    ) : (
-                        <div>Loading data ...</div>
-                    )}
+                    <svg
+                        viewBox={"0 0 " + 600 + " " + 400}
+                        ref={chartRef} />
                 </CardContent>
             </Card>
         </>

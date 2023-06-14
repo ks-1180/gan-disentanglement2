@@ -23,9 +23,11 @@ const useWalks = create((set, get) => ({
   space: 'z',
   direction: 'Eyeglasses',
   walks: [],
+  selectedWalks: [],
   loading: false,
   error: false,
   errorMessage: '',
+  setSelectedWalks: (selectedWalks) => set(produce(state => { state.selectedWalks = selectedWalks })),
   setLoading: (loading) => set(produce(state => { state.loading = loading })),
   setError: (error, errorMessage) => set(produce(state => {
     state.error = error;

@@ -106,15 +106,15 @@ export default function PaperPage() {
             <Grid item xs={12} sm={12} md={6}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <UmapDisplay direction={direction} selectedWalks={walk} setSelectedWalks={setWalk} />
+                  <UmapDisplay />
                 </Grid>
                 <Grid item xs={12}>
-                  <RegressionScatterplot direction={direction} walk={walk} setWalk={setWalk} />
+                  <RegressionScatterplot />
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={12} sm={12} md={6}>
-                <LineChartDisplay direction={direction} selectedWalks={walk} />
+                {/*<LineChartDisplay />*/}
             </Grid>
           </Grid>
         </Container>
