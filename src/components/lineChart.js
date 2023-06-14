@@ -1,15 +1,24 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
+import useWalks from '@component/stores/walks';
 
-const generateLineChart = (ref, data, slopes, attribute, selectedWalks) => {
-    const walks = data.map((row) => {
-        const walk = [];
+const generateLineChart = (ref, walks, attribute, selectedWalks) => {
+    
+    let attributes = [];
+    let slopes = [];
+
+    walks.forEach(walk=>{
+
+    });
+
+    const data = walks.map((row) => {
+        const d = [];
         Object.keys(row).forEach((key) => {
             if (key.includes(attribute)) {
-                walk.push({time: key.split('_')[0], value: row[key]});
+                d.push({time: key.split('_')[0], value: row[key]});
             }
         });
-        return walk;
+        return d;
     });
 
     let selectedWalksData = walks;
@@ -161,34 +170,31 @@ const generateLineChart = (ref, data, slopes, attribute, selectedWalks) => {
         .call(d3.axisBottom(xScale))*/
 }
 
-export function LineChart({direction, selectedWalks, attribute}) {
+export function LineChart({attribute}) {
     const chartRef = useRef();
-
-    const [data, setData] = useState([]);
-    const [slopes, setSlopes] = useState([]);
-    const [isDataLoaded, setIsDataLoaded] = useState([false]);
+    const walks = useWalks(state=>state.walks);
+    const selectedWalks = useWalks(state=>state.selectedWalks);
 
     // generate line chart after data is loaded
     useEffect(() => {
-        if(isDataLoaded == true) {
-            generateLineChart(chartRef, data, slopes, attribute, selectedWalks);
-        }
-    }, [data, slopes, attribute, selectedWalks]);
+        generateLineChart(chartRef, walks, attribute, selectedWalks);
+    }, [walks, attribute, selectedWalks]);
 
-    useEffect(() => {
-        const path = `/radar/${direction.value}.csv`;
-        d3.csv(path).then((data) => {
-            setData(data);
-            setIsDataLoaded(true);
-        });
+    // useEffect(() => {
+    //     const path = `/radar/${direction.value}.csv`;
+    //     d3.csv(path).then((data) => {
+    //         setData(data);
+    //         setIsDataLoaded(true);
+    //     });
 
-        const path2 = `/regression/${attribute}.csv`
-        d3.csv(path2).then((slopes) => {
-            setSlopes(slopes);
-            setIsDataLoaded(true);
-        });
-        
-    }, [direction]);
+    //     const path2 = `/regression/${attribute}.csv`
+    //     d3.csv(path2).then((slopes) => {
+    //         setSlopes(slopes);
+    //         setIsDataLoaded(true);
+    //     });
+    //     
+    // }, [direction]);
+
 
     return (
         <svg viewBox={'0 0' + 800 + " " + 400} style={{width: '300px', height: '110px'}} ref={chartRef}/>

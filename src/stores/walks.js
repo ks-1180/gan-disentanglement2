@@ -17,7 +17,7 @@ const calculateLinearRegressions = (walk) => {
   return walk;
 };
 
-let controller = new AbortController()
+let controller = new AbortController();
 
 const useWalks = create((set, get) => ({
   space: 'z',
