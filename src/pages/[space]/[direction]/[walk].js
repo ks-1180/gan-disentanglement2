@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -42,10 +42,22 @@ const Walk = ({ space, direction, walk }) => {
     const router = useRouter();
     const setSpaceDirectionWalk = useWalk(state => state.setSpaceDirectionWalk);
 
-    const start = useWalk(state=>state.start);
-    const end = useWalk(state=>state.end);
+    let start = useWalk(state=>state.start);
+    let end = useWalk(state=>state.end);
     const setStart = useWalk(state=>state.setStart);
     const setEnd = useWalk(state=>state.setEnd);
+
+    const minDistance = 1;
+    const handleSlider = (event, newValue, activeThumb) => {
+        if (!Array.isArray(newValue)) {
+            return;
+        }
+        if (activeThumb === 0) {
+            setStart(Math.min(newValue[0], end - minDistance));
+        } else {
+            setEnd(Math.max(newValue[1], start + minDistance));
+        }
+    };
 
     useEffect(() => {
         if (space && direction && walk) {
@@ -84,8 +96,9 @@ const Walk = ({ space, direction, walk }) => {
                                 <CardMedia component="img" image={path} alt="s" />
                                 <CardContent>
                                     <Slider
-                                        aria-label="Temperature"
-                                        defaultValue={10}
+                                        getArialLabel={() => "Walk range"} 
+                                        value={[start, end]}
+                                        onChange={handleSlider}
                                         valueLabelDisplay="auto"
                                         step={1}
                                         marks

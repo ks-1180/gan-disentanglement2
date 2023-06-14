@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import useWalk from '@component/stores/walk';
+import walk from '@component/pages/api/walk';
 
 function radarX(radius, index, angle) {
   return radius * Math.cos(radarAngle(angle, index));
@@ -21,53 +22,77 @@ function scale(index, point) {
   return s(point);
 }
 
-function transformData(data, columns) {
-  var map = d3.map(data, function(d) {
-    return d.walk;
+function topAttributes(data, start, end, numAxis) {
+  if(start < 0 || start > end || end >= data.attributes[0].steps.length) {
+    return "Invalid start or end index";
+  }
+
+  let changes = data.attributes.map((attr) => {
+    return {
+      name: attr.name,
+      absChange: Math.abs(attr.steps[end] - attr.steps[start]),
+      change: attr.steps[end] - attr.steps[start],
+      startValue: attr.steps[start],
+      endValue: attr.steps[end]
+    }
   });
 
-  var output = [];
+  changes.sort((a, b) => b.absChange - a.absChange);
+  changes = changes.slice(0, numAxis);
+  changes.sort((a, b) => b.change - a.change);
 
-  map.each(function(d, i) {
-    var obj = { 'walk' : i };
-    columns.forEach(function(column) {
-      obj[column] = d[column + '_' + i.split('_')[-1]];
-    });
-    output.push(obj);
-  });
-  return obj;
+  let startOutput = {};
+  let endOutput = {};
+  let dimensions = [];
+  changes.forEach((attr) => {
+    startOutput[attr.name] = attr.startValue;
+    endOutput[attr.name] = attr.endValue;
+    dimensions.push(attr.name);
+  })
+
+  return {
+    data: [startOutput, endOutput],
+    dimensions
+  };
 }
 
-const generateRadarChart2 = (ref, data, walk, direction) => {
+const generateRadarChart = (ref, walkData, start, end) => {
   const width = 600;
   const height = 400;
-  const margin = { top: 20, right: 20, bottom: 20, left: 50 };
   const scaleR = 200;
   const radius = (width - scaleR) / 2;
 
-  d3.select(ref.current).selectAll("svg").remove();
+  // Firt filter data
+  const { data, dimensions} = topAttributes(walkData, start, end, 8);
+  //console.log('start: ', start);
+  //console.log('end: ', end);
+  console.log('radar: ', data);
 
-  // const walk = data.
-  // transform csv to json, with walk id as key
-  data = data.filter(function(d) {
-    return d.walk == walk;
-  })
-  const d = data[0];
-
-  // TODO: later select columns with most impakt
-  const dimensions = [
-    `${direction}`, 
+  /*const dimensions = [
+    `${walkData.direction}`, 
     'Male', 
     'Young', 
     'Brown_Hair', 
     'Smiling', 
     'No_Beard',
-  ]; //data.columns;
+  ]; //data.columns;*/
+
+  d3.select(ref.current).selectAll("svg").remove();
+
+  // const walk = data.
+  // transform csv to json, with walk id as key
+  /*data = data.filter(function(d) {
+    return d.walk == walk;
+  })*/
+  //const d = data[0];
+
+  // TODO: later select columns with most impakt
+  
   
   // var output = []
   // data[0];
   //data.forEach(function(d) {
-  data = [0, 9].map(
+  /*data = [0, 9].map(
     (walkNum)=>{
       var obj = {'walk': `${d.walk}_${walkNum}`}
       dimensions.forEach(
@@ -76,7 +101,7 @@ const generateRadarChart2 = (ref, data, walk, direction) => {
       });
       return obj;
     }
-  );
+  );*/
   
   /* var obj = { 'walk': '0_' + d.walk, 
               'Smiling': d['0_Smiling'], 
@@ -158,9 +183,9 @@ const generateRadarChart2 = (ref, data, walk, direction) => {
       .attr("dy", "0.35em")
       .attr("x", function (d, i) { return radarX(axisRadius(textRadius), i, radarAxisAngle); })
       .attr("y", function (d, i) { return radarY(axisRadius(textRadius), i, radarAxisAngle); })
-      .style("font-size", "18px")
+      .style("font-size", "12px")
       .style("fill", "#009688")
-      .text(function (d, i) { return dimensions[i] });
+      .text(function (d, i) { return dimensions[i].replaceAll('_', ' '); });
 
     // render polylines
     //const color = ['#b2dfdb', '#7c9c99'];
@@ -185,7 +210,6 @@ const generateRadarChart2 = (ref, data, walk, direction) => {
               path += x1 + ' ' + y1 + ' ';
             })
             path += "Z";
-            //path = "M 2.1768096854844204e-14 -355.5 171.00000000000003 0 1.7634913907721887e-14 288 -90.00000000000001 1.102182119232618e-14 Z";
             return path;
           })
           .attr("stroke", function (d, i) { return color[i] })
@@ -204,7 +228,16 @@ const RadarChart = () => {
   const legendRef = useRef();
 
   const walkData = useWalk(state=>state.walkData);
+  const start = useWalk(state=>state.start);
+  const end = useWalk(state=>state.end);
+
   console.log('walkData', walkData);
+
+  useEffect(() => {
+    if (walkData) {
+      generateRadarChart(chartRef, walkData, start, end)
+    }
+  }); 
 
   return (
     <svg viewBox={"0 0 " + 600 + " " + 400} ref={chartRef} />
@@ -212,32 +245,4 @@ const RadarChart = () => {
 };
 
 export default RadarChart;
-
-
-  // const [data, setData] = useState([]);
-  // const [isDataLoaded, setIsDataLoaded] = useState([false]);
-
-  // useEffect(() => {
-  //   if (isDataLoaded == true) {
-  //     generateRadarChart2(chartRef, data, walk, direction.value);
-  //   }
-  // }, [data, walk, direction]);
-
-  // useEffect(() => {
-  //   // console.log("radar: ", direction.value);
-  //   // //get walk data TODO: change key to something more unique
-  //   // const localData = localStorage.getItem(direction.value);
-  //   // setIsDataLoaded(false)
-  //   // if (false) {
-  //   //     setData(JSON.parse(localData));
-  //   //     setIsDataLoaded(true);
-  //   // } else {
-  //   //   const path = `/radar/${direction.value}.csv`;
-  //   //   d3.csv(path).then((data) => {
-  //   //     setData(data);
-  //   //     setIsDataLoaded(true);
-  //   //     localStorage.setItem(direction.value, JSON.stringify(data))
-  //   //   });
-  //   // }
-  // }, [direction]);
 
