@@ -47,10 +47,12 @@ const accessoiresAtt = [
   { label: "Wearing Lipstick", value: "Wearing_Lipstick" },
 ];
 
-export function FilterDialog({ direction, setDirection }) {
-  const [open, setOpen] = React.useState(false);
+export function FilterDialog() {
 
-  const setDirection2 = useWalks(state=>state.setDirection);
+  const direction = useWalks(state=>state.direction);
+  const setDirection = useWalks(state=>state.setDirection);
+
+  const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -61,8 +63,7 @@ export function FilterDialog({ direction, setDirection }) {
   };
 
   const handleChipClick = (attribute) => {
-    setDirection(attribute);
-    setDirection2(attribute.value);
+    setDirection(attribute.value);
   };
 
   const descriptionElementRef = React.useRef(null);
@@ -80,8 +81,8 @@ export function FilterDialog({ direction, setDirection }) {
       <Chip
         label={attribute.label}
         clickable
-        variant={direction.value === attribute.value ? "filled" : "outlined"}
-        color={direction.value === attribute.value ? "primary" : "default"}
+        variant={direction === attribute.value ? "filled" : "outlined"}
+        color={direction === attribute.value ? "primary" : "default"}
         onClick={() => {
           handleChipClick(attribute);
           handleClose();
@@ -109,17 +110,17 @@ export function FilterDialog({ direction, setDirection }) {
             variant="contained"
             color="secondary"
           >
-            Settings
+            Direction
           </Button>
         </Grid>
         <Grid item>
-          <Chip
-            label={direction.label}
+          {/* <Chip
+            label={direction.replaceAll('_', ' ')}
             variant={"filled"}
             color={"default"}
             onDelete={handleClickOpen}
-          />
-          {/* <Typography>{direction.label}</Typography> */}
+          />*/}
+          <Typography>{direction.replaceAll('_', ' ')}</Typography> 
         </Grid>
       </Grid>
       <Dialog
