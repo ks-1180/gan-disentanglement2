@@ -7,7 +7,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import ButtonBases from '@component/components/complex-buttons';
+import ButtonBases from '@component/components/complexButtons';
 
 export default function Home() {
   return (

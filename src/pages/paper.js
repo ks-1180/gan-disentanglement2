@@ -33,7 +33,11 @@ export default function PaperPage() {
   const [walk, setWalk] = useState([1]);
   const router = useRouter();
 
-  const path = `/walks/${direction.value}/${walk[0]}.jpg`;
+  let path = `/walks/${direction.value}/${walk[0]}.jpg`;
+
+  if (!walk.length) {
+    path = `/walks/${direction.value}/1.jpg`;
+  }
 
   const walks = useWalks(state => state.walks);
 
@@ -45,8 +49,6 @@ export default function PaperPage() {
   const loading = useWalks(state=>state.loading);
   const error = useWalks(state=>state.error);
   const errorMessage = useWalks(state=>state.errorMessage);
-
-  console.log(walks);
 
 
   const handleSpaceChange = (event) => {
@@ -112,7 +114,7 @@ export default function PaperPage() {
               </Grid>
             </Grid>
             <Grid item xs={12} sm={12} md={6}>
-              <LineChartDisplay direction={direction} />
+                <LineChartDisplay direction={direction} selectedWalks={walk} />
             </Grid>
           </Grid>
         </Container>

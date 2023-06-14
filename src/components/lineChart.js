@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 
-const generateLineChart = (ref, data, slopes, attribute) => {
+const generateLineChart = (ref, data, slopes, attribute, selectedWalks) => {
     const walks = data.map((row) => {
         const walk = [];
         Object.keys(row).forEach((key) => {
@@ -12,7 +12,14 @@ const generateLineChart = (ref, data, slopes, attribute) => {
         return walk;
     });
 
-    const flattenWalks = walks.flat();
+    let selectedWalksData = walks;
+
+    if (selectedWalks.length > 0) {
+        selectedWalksData = selectedWalks.map((index) => walks[index]);
+    }
+        
+
+    const flattenWalks = selectedWalksData.flat();
 
     const slopesValues = slopes.map((d) => +d.slope);
 
@@ -77,7 +84,7 @@ const generateLineChart = (ref, data, slopes, attribute) => {
         .y((d, i) => yScale(d.value));
 
 
-    walks.slice(0, 50).forEach((walk) => {
+    selectedWalksData.slice(0, 100).forEach((walk) => {
         svg
             .append('path')
             .datum(walk)
@@ -154,7 +161,7 @@ const generateLineChart = (ref, data, slopes, attribute) => {
         .call(d3.axisBottom(xScale))*/
 }
 
-export function LineChart({direction, attribute}) {
+export function LineChart({direction, selectedWalks, attribute}) {
     const chartRef = useRef();
 
     const [data, setData] = useState([]);
@@ -164,9 +171,9 @@ export function LineChart({direction, attribute}) {
     // generate line chart after data is loaded
     useEffect(() => {
         if(isDataLoaded == true) {
-            generateLineChart(chartRef, data, slopes, attribute);
+            generateLineChart(chartRef, data, slopes, attribute, selectedWalks);
         }
-    }, [data, slopes, attribute]);
+    }, [data, slopes, attribute, selectedWalks]);
 
     useEffect(() => {
         const path = `/radar/${direction.value}.csv`;
