@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
+import useWalk from '@component/stores/walk';
 
 function radarX(radius, index, angle) {
   return radius * Math.cos(radarAngle(angle, index));
@@ -198,37 +199,12 @@ const generateRadarChart2 = (ref, data, walk, direction) => {
 
 
 
-
-const RadarChart = ({direction, walk}) => {
+const RadarChart = () => {
   const chartRef = useRef();
   const legendRef = useRef();
 
-  const [data, setData] = useState([]);
-  const [isDataLoaded, setIsDataLoaded] = useState([false]);
-
-  useEffect(() => {
-    if (isDataLoaded == true) {
-      generateRadarChart2(chartRef, data, walk, direction.value);
-    }
-  }, [data, walk, direction]);
-
-  useEffect(() => {
-    // console.log("radar: ", direction.value);
-    // //get walk data TODO: change key to something more unique
-    // const localData = localStorage.getItem(direction.value);
-    // setIsDataLoaded(false)
-    // if (false) {
-    //     setData(JSON.parse(localData));
-    //     setIsDataLoaded(true);
-    // } else {
-    //   const path = `/radar/${direction.value}.csv`;
-    //   d3.csv(path).then((data) => {
-    //     setData(data);
-    //     setIsDataLoaded(true);
-    //     localStorage.setItem(direction.value, JSON.stringify(data))
-    //   });
-    // }
-  }, [direction]);
+  const walkData = useWalk(state=>state.walkData);
+  console.log('walkData', walkData);
 
   return (
     <svg viewBox={"0 0 " + 600 + " " + 400} ref={chartRef} />
@@ -236,3 +212,32 @@ const RadarChart = ({direction, walk}) => {
 };
 
 export default RadarChart;
+
+
+  // const [data, setData] = useState([]);
+  // const [isDataLoaded, setIsDataLoaded] = useState([false]);
+
+  // useEffect(() => {
+  //   if (isDataLoaded == true) {
+  //     generateRadarChart2(chartRef, data, walk, direction.value);
+  //   }
+  // }, [data, walk, direction]);
+
+  // useEffect(() => {
+  //   // console.log("radar: ", direction.value);
+  //   // //get walk data TODO: change key to something more unique
+  //   // const localData = localStorage.getItem(direction.value);
+  //   // setIsDataLoaded(false)
+  //   // if (false) {
+  //   //     setData(JSON.parse(localData));
+  //   //     setIsDataLoaded(true);
+  //   // } else {
+  //   //   const path = `/radar/${direction.value}.csv`;
+  //   //   d3.csv(path).then((data) => {
+  //   //     setData(data);
+  //   //     setIsDataLoaded(true);
+  //   //     localStorage.setItem(direction.value, JSON.stringify(data))
+  //   //   });
+  //   // }
+  // }, [direction]);
+

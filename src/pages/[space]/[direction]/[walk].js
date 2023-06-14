@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import React from "react";
+import React, { useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -14,6 +14,7 @@ import { RadarChartDisplay } from "@component/components/radarChartDisplay";
 import VideoCard from '@component/components/video';
 import { WalkDisplay } from "@component/components/walkDisplay";
 import { PrismaClient } from '@prisma/client';
+import useWalk from '@component/stores/walk';
 
 export async function getStaticPaths() {
     // Here you would fetch all walk IDs and their directions you want to pre-render.
@@ -29,41 +30,34 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
     // Fetch necessary data for the walk using params.walkId and params.direction
-    const prisma = new PrismaClient();
-    const direction= params.direction
-    const walk = params.walk
     const space = params.space
+    const direction = params.direction
+    const walk = params.walk
 
-    const walks = await prisma.Walk.findMany({
-        where: {
-            space: space,
-            direction: direction,
-            walk: Number(walk),
-        },
-        include: {
-            attributes: {
-                include: {
-                    steps: {
-                        orderBy: {
-                            intensity: 'asc',
-                        },
-                    },
-                },
-            },
-        },
-    });
-
-    return { props: { direction: direction, walk: walk, space: space, walks: walks } }
+    return { props: { direction: direction, walk: walk, space: space } }
 }
 
 
-const Walk = ({ space, direction, walk, walks }) => {
+const Walk = ({ space, direction, walk }) => {
     const router = useRouter();
+    const setSpaceDirectionWalk = useWalk(state => state.setSpaceDirectionWalk);
+
+    const start = useWalk(state=>state.start);
+    const end = useWalk(state=>state.end);
+    const setStart = useWalk(state=>state.setStart);
+    const setEnd = useWalk(state=>state.setEnd);
+
+    useEffect(() => {
+        if (space && direction && walk) {
+            setSpaceDirectionWalk(space, direction, walk);
+        }
+    }, [space, direction, walk]);
 
     if (router.isFallback) {
         // This will be displayed while waiting for getStaticProps to finish
         return <div>Loading...</div>
     }
+
 
     const path = `/walks/${direction}/${walk}.jpg`;
     return (
@@ -96,16 +90,16 @@ const Walk = ({ space, direction, walk, walks }) => {
                                         step={1}
                                         marks
                                         min={0}
-                                        max={10}
+                                        max={99}
                                     />
                                 </CardContent>
                             </Card>
                         </Grid>
                         <Grid item xs={12} sm={12} md={6}>
-                            <VideoCard path={`/videos/${space}/${direction}/${walk}.mp4`}/>
+                            <VideoCard path={`/videos/${space}/${direction}/${walk}.mp4`} />
                         </Grid>
                         <Grid item xs={12} sm={12} md={6}>
-                            <VideoCard path={`/videos/${space}/${direction}/${walk}.mp4`}/>
+                            <VideoCard path={`/videos/${space}/${direction}/${walk}.mp4`} />
                         </Grid>
                         <Grid item xs={12} sm={12} md={6}>
                             <RadarChartDisplay direction={{ value: direction }} walk={walk} />

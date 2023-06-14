@@ -19,7 +19,7 @@ const calculateLinearRegressions = (walk) => {
 
 let controller = new AbortController()
 
-const useStore = create((set, get) => ({
+const useWalks = create((set, get) => ({
   space: 'z',
   direction: 'Eyeglasses',
   walks: [],
@@ -94,4 +94,4 @@ const useStore = create((set, get) => ({
   }
 }));
 
-export default useStore;
+export default useWalks;
