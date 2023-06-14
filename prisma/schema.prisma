@@ -18,6 +18,8 @@ model Walk {
   start       Float
   end         Float
   attributes Attribute[]
+
+  @@index([space, direction])
 }
 
 model Attribute {
@@ -26,6 +28,8 @@ model Attribute {
   walkId Int
   name String
   steps Step[]
+
+  @@index([name])
 }
 
 model Step {
@@ -34,4 +38,6 @@ model Step {
   attributeId Int
   intensity   Float
   score       Float
+
+  @@index([intensity])
 }

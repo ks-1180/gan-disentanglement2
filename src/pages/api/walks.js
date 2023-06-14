@@ -1,36 +1,29 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import fs from 'fs';
+import path from 'path';
 
 export default async (req, res) => {
-  const { space, direction, page, limit } = req.query;
-
-  // calculate how many records to skip
-  const skip = page > 1 ? (page - 1) * limit : 0;
+  const { space, direction, chunk } = req.query;
 
   try {
-    const walks = await prisma.walk.findMany({
-      where: {
-        space: space,
-        direction: direction,
-      },
-      include: {
-        attributes: {
-          include: {
-            steps: {
-              orderBy: {
-                intensity: 'asc',
-              },
-            },
-          },
-        },
-      },
-      skip: parseInt(skip),
-      take: parseInt(limit),
-    });
+    // Construct the path to the required JSON file
+    const filePath = path.join(process.cwd(), `chunks/${space}/${direction}/${chunk}.json`);
+
+    // Check if the file exists
+    if (!fs.existsSync(filePath)) {
+      res.status(404).json({ error: "File not found" });
+      return;
+    }
+
+    // Read the file and parse it as JSON
+    const fileContents = fs.readFileSync(filePath, 'utf8');
+    let walks = JSON.parse(fileContents);
+
+    // Paginate the results
+    // walks = walks.slice(skip, skip + parseInt(limit));
 
     res.status(200).json(walks);
   } catch (error) {
-    res.status(500).json({ error: "Database connection failed" });
+    console.error(error);
+    res.status(500).json({ error: "Failed to process the request" });
   }
 };

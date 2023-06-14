@@ -1,16 +1,12 @@
 import { create } from "zustand";
 import { produce } from "immer";
-
-// simple-statistics for linear regression calculation
 import * as simpleStatistics from "simple-statistics";
 
 const calculateLinearRegressions = (walk) => {
   console.log('start linear regression');
   walk.attributes.forEach((attribute) => {
-    const steps = attribute.steps.map((step) => [
-      step.intensity,
-      step.score,
-    ]);
+    const scores = attribute.steps;
+    const steps = scores.map((score, index) => [index - 5, score]);
     const regression = simpleStatistics.linearRegression(steps);
     attribute.slope = regression.m;
     attribute.intercept = regression.b;
@@ -31,133 +27,71 @@ const useStore = create((set, get) => ({
   loading: false,
   error: false,
   errorMessage: '',
-
-  // Function to handle setting loading state
-  setLoading: (loading) => {
-    set(produce(state => {
-      state.loading = loading
-    }))
-  },
-
-  // Function to handle setting error state
-  setError: (error, errorMessage) => {
-    set(produce(state => {
-      state.error = error
-      state.errorMessage = errorMessage
-    }))
-  },
-
-  getTotalWalks: async (space, direction) => {
-    // Abort any ongoing fetch requests
-    controller.abort();
-    controller = new AbortController();
-
-    try {
-      const response = await fetch(
-        `/api/totalWalks?space=${space}&direction=${direction}`,
-        { signal: controller.signal }
-      );
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const { total } = await response.json();
-      return total;
-    } catch (error) {
-      console.error("Fetch failed:", error);
-      set(state => produce(state, draftState => {
-        draftState.loading = false;
-        draftState.error = true;
-        draftState.errorMessage = error.message;
-      }));
-    }
-  },
-
+  setLoading: (loading) => set(produce(state => { state.loading = loading })),
+  setError: (error, errorMessage) => set(produce(state => {
+    state.error = error;
+    state.errorMessage = errorMessage;
+  })),
   setSpace: async (space) => {
     const { direction } = get();
     await get().setSpaceAndDirection(space, direction);
   },
-
   setDirection: async (direction) => {
     const { space } = get();
     await get().setSpaceAndDirection(space, direction);
   },
-
-  // Fetching walks and handling pagination
-  setSpaceAndDirection: async (space, direction, limit = 50) => {
-    set(state => produce(state, draftState => {
-      draftState.loading = true
-      draftState.walks = []
-      draftState.error = false
-      draftState.errorMessage = ''
-    }))
+  getWalks: async (space, direction, chunks = 10) => {
+    set(produce(state => {
+      state.loading = true;
+      state.walks = [];
+      state.error = false;
+      state.errorMessage = '';
+    }));
 
     try {
-      const totalWalks = await getTotalWalks(space, direction)
-      const pages = Math.ceil(totalWalks / limit)
+      for (let chunk = 0; chunk < chunks; chunk++) {
+        try {
+          const response = await fetch(`/api/walks?space=${space}&direction=${direction}&chunk=${chunk}`, { signal: controller.signal });
 
-      for (let page = 1; page <= pages; page++) {
-        if (get().loading) {
-          try {
-            const response = await fetch(
-              `/api/walks?space=${space}&direction=${direction}&page=${page}&limit=${limit}`,
-              { signal: controller.signal }
-            )
+          if (!response.ok) throw new Error("Network response was not ok");
 
-            if (!response.ok) {
-              throw new Error("Network response was not ok")
-            }
+          const walks = await response.json();
+          const updatedWalks = walks.map(calculateLinearRegressions);
 
-            const walks = await response.json()
-
-            const updatedWalksPromises = walks.map(async (walk) => {
-              return calculateLinearRegressions(walk)
-            })
-
-            const updatedWalks = await Promise.all(updatedWalksPromises)
-
-            set(state => produce(state, draftState => {
-              draftState.walks.push(...updatedWalks)
-            }))
-
-          } catch (error) {
-            console.error("Fetch failed:", error)
-            set(state => produce(state, draftState => {
-              draftState.loading = false
-              draftState.error = true
-              draftState.errorMessage = error.message
-            }))
-          }
+          set(state => produce(state, draftState => {
+            draftState.walks.push(...updatedWalks);
+          }));
+        } catch (error) {
+          console.error("Fetch failed:", error);
+          set(produce(state => {
+            state.loading = false;
+            state.error = true;
+            state.errorMessage = error.message;
+          }));
         }
       }
-
-      set(state => produce(state, draftState => {
-        draftState.loading = false
-      }))
+      set(produce(state => { state.loading = false; }));
     } catch (error) {
-      console.error("Fetch failed:", error)
-      set(state => produce(state, draftState => {
-        draftState.loading = false
-        draftState.error = true
-        draftState.errorMessage = error.message
-      }))
+      console.error("Fetch failed:", error);
+      set(produce(state => {
+        state.loading = false;
+        state.error = true;
+        state.errorMessage = error.message;
+      }));
     }
   },
-
   setSpaceAndDirection: (space, direction) => {
-    // Abort any ongoing fetch requests
-    controller.abort()
-    controller = new AbortController()
+    controller.abort();
+    controller = new AbortController();
 
-    set(state => produce(state, draftState => {
-      draftState.space = space
-      draftState.direction = direction
-      draftState.loading = true
-      draftState.walks = []
-    }))
+    set(produce(state => {
+      state.space = space;
+      state.direction = direction;
+      state.loading = true;
+      state.walks = [];
+    }));
 
-    get().getWalks(space, direction)
+    get().getWalks(space, direction);
   }
 }));
 
