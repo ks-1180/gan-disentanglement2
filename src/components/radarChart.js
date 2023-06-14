@@ -66,7 +66,6 @@ const generateRadarChart = (ref, walkData, start, end) => {
   const { data, dimensions} = topAttributes(walkData, start, end, 8);
   //console.log('start: ', start);
   //console.log('end: ', end);
-  console.log('radar: ', data);
 
   /*const dimensions = [
     `${walkData.direction}`, 
@@ -111,7 +110,7 @@ const generateRadarChart = (ref, walkData, start, end) => {
   obj = { 'walk': '9_' + d.walk, 'Smiling': d['9_Smiling'], 'Bangs': d['9_Bangs'] };
   output.push(obj);
   // });
-  console.log('newData2: ', output); */
+  */
   
   //const names = dimensions.splice(0, 1)
 
@@ -230,8 +229,6 @@ const RadarChart = () => {
   const walkData = useWalk(state=>state.walkData);
   const start = useWalk(state=>state.start);
   const end = useWalk(state=>state.end);
-
-  console.log('walkData', walkData);
 
   useEffect(() => {
     if (walkData) {

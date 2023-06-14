@@ -29,7 +29,6 @@ const generateScatterplot = (ref, walks, selectedWalks) => {
             data.push(newObject);
         });
     });
-    console.log(data);
 
 
     // create scales for the x and.slope axes

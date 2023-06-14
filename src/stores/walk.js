@@ -33,7 +33,6 @@ const useWalk = create((set, get) => ({
 
         try {
             const { space, direction, walk } = get();
-            console.log(space, direction, walk);
             const response = await fetch(`/api/walk?space=${space}&direction=${direction}&walk=${walk}`, { signal: controller.signal });
 
             if (!response.ok) throw new Error("Network response was not ok");
@@ -57,7 +56,6 @@ const useWalk = create((set, get) => ({
         controller.abort();
         controller = new AbortController();
 
-        console.log(space, direction, walk);
         set(produce(state => {
             state.space = space;
             state.direction = direction;
