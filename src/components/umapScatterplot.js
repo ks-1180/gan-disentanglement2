@@ -54,7 +54,7 @@ const generateScatterplot = (ref, data, selectedWalks, setSelectedWalks) => {
         .extent([[0, 0], [width, height]])
         .on("end", function handleBrush(event) {
             if (!event.selection) {
-                setSelectedWalks([1]);
+                setSelectedWalks([]);
             } else {
                 const [[x1, y1], [x2, y2]] = event.selection;
                 const selected = data.filter(d => {
