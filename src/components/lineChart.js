@@ -115,15 +115,21 @@ const generateLineChart = (ref, data, attribute, selectedWalks) => {
         .domain([-maxAbsVal, maxAbsVal])
         .thresholds(thresholds)(slopesValues);
 
+    const numBins = bins.length;
+    const maxLength = d3.max(bins, d => d.length);
+
+    const padding = 0.2;
+
     const xBarScale = d3
-        .scaleLinear()
-        .domain([-maxAbsVal, maxAbsVal])
-        .range([0, barChartWidth]);
+        .scaleBand()
+        .domain(bins.map(d => d.x0)) // Use the bin start values as the domain
+        .range([0, barChartWidth])
+        .paddingInner(padding)
+        .paddingOuter(padding / 2);
 
     const yBarScale = d3
         .scaleLinear()
-        //.domain([-1, 1])
-        .domain([0, d3.max(bins, d => d.length)])
+        .domain([0, maxLength])
         .range([barChartHeight, margin.top]);
 
     const barChartContainer = svg
@@ -139,7 +145,7 @@ const generateLineChart = (ref, data, attribute, selectedWalks) => {
         .attr("x", d => xBarScale(+d.x0))
         .attr("y", d => yBarScale(+d.length))
         .attr("height", d => barChartHeight - yBarScale(+d.length))
-        .attr("width", d => xBarScale(+d.x1) - xBarScale(+d.x0))
+        .attr("width", xBarScale.bandwidth())
         .attr('fill', d => (+d.x0 >= 0 ? secondary : primary));
 
     svg.append("line")
