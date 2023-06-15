@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -27,30 +27,94 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 
+function linspace(start, end, n) {
+  const diff = end - start;
+  const step = diff / (n - 1);
+  return Array.from({ length: n }, (_, i) => start + i * step);
+}
+
+const ImageStripe = ({ path }) => {
+  const start = 0;
+  const end = 99;
+
+  const videos = linspace(0, 1, 10).map((i) => {
+    return {
+      ref: useRef(null),
+      i: i
+    }
+  });
+
+  useEffect(() => {
+    const startSec = start / 20;
+    const endSec = end / 20;
+    const delta = endSec - startSec;
+    videos.forEach(videoData => {
+      let video = videoData.ref.current;
+      if (video) {
+        const newTime = startSec + delta * videoData.i;
+        video.currentTime = newTime;
+      }
+    });
+  }, [path, ...videos.map(video => video.ref)]);
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        width: '100%',
+        overflow: 'hidden',
+        paddingTop: '26px',
+        paddingLeft: '26px',
+        paddingRight: '26px',
+        minHeight: '110px'  // Add a minimum height here 
+      }}
+    >
+      {
+        videos.map((video) =>
+          <Box key={video.i} sx={{ flexBasis: '10%', flexGrow: 1, maxWidth: '10%' }}>
+            <CardMedia
+              component="video"
+              src={path}
+              ref={video.ref}
+              title="video stripe"
+              sx={{ 
+                width: '100%', 
+                height: '110px', // explicit height setting
+                objectFit: 'contain' // added to maintain aspect ratio
+              }}
+            />
+          </Box>
+        )
+      }
+    </Box>
+  );
+}
+
 export default function PaperPage() {
 
-  const direction = useWalks(state=>state.direction);
-  const selectedWalks = useWalks(state=>state.selectedWalks);
+  const direction = useWalks(state => state.direction);
+  const selectedWalks = useWalks(state => state.selectedWalks);
 
   const router = useRouter();
 
 
   let walk = 1;
-  if (selectedWalks.length>0) {
+  if (selectedWalks.length > 0) {
     walk = selectedWalks[0];
   }
-  const path = `/walks/${direction}/${walk}.jpg`;
 
   const walks = useWalks(state => state.walks);
 
-  const setSpace = useWalks(state=>state.setSpace);
-  const setSpaceAndDirection = useWalks(state=>state.setSpaceAndDirection);
+  const setSpace = useWalks(state => state.setSpace);
+  const setSpaceAndDirection = useWalks(state => state.setSpaceAndDirection);
 
-  const space = useWalks(state=>state.space);
-  const loading = useWalks(state=>state.loading);
-  const error = useWalks(state=>state.error);
-  const errorMessage = useWalks(state=>state.errorMessage);
+  const space = useWalks(state => state.space);
+  const loading = useWalks(state => state.loading);
+  const error = useWalks(state => state.error);
+  const errorMessage = useWalks(state => state.errorMessage);
 
+  const path = `/videos/${space}/${direction}/${walk}.mp4`;
 
   const handleSpaceChange = (event) => {
     setSpace(event.target.value);
@@ -82,10 +146,10 @@ export default function PaperPage() {
                   flexDirection: "column",
                 }}
               >
-                <CardMedia component="img" image={path} alt="walk" />
+                <ImageStripe path={path} />
                 <CardContent sx={{ flexGrow: 1 }}>
                   <Stack direction={'row'} justifyContent={'space-between'}>
-                    <FilterDialog/>
+                    <FilterDialog />
                     <FormControl>
                       <RadioGroup
                         row
@@ -115,7 +179,7 @@ export default function PaperPage() {
               </Grid>
             </Grid>
             <Grid item xs={12} sm={12} md={6}>
-                <LineChartDisplay />
+              <LineChartDisplay />
             </Grid>
           </Grid>
         </Container>
