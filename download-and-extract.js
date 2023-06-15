@@ -3,10 +3,12 @@ const fs = require("fs");
 const path = require("path");
 const AdmZip = require("adm-zip");
 
-const downloadUrl = "https://owncloud.tuwien.ac.at/index.php/s/t3g1Mdoqejf2Ggp/download";
-const destinationPath = path.resolve("./public.zip");
-const publicFolderPath = path.resolve("./public");
-const macosxFolderPath = path.resolve("./__MACOSX");
+const chunksUrl = "https://owncloud.tuwien.ac.at/index.php/s/ei5F6KJyZYtFQ1j/download";
+const videosUrl = "https://owncloud.tuwien.ac.at/index.php/s/rRHxMg4FcOg8RNA/download";
+const chunksDestinationPath = path.resolve("./chunks.zip");
+const videosDestinationPath = path.resolve("./public/videos.zip");
+const chunksFolderPath = path.resolve("./chunks");
+const videosFolderPath = path.resolve("./public/videos");
 
 function folderExists(folderPath) {
   return fs.existsSync(folderPath) && fs.lstatSync(folderPath).isDirectory();
@@ -28,7 +30,6 @@ async function removeFolder(folderPath) {
 
   await fs.promises.rmdir(folderPath);
 }
-
 
 function downloadFile(url, dest) {
   return new Promise((resolve, reject) => {
@@ -58,53 +59,52 @@ function downloadFile(url, dest) {
   });
 }
 
-// async function extractZipFile(zipPath, outputPath) {
-//   return new Promise((resolve, reject) => {
-//     extractZip(zipPath, { dir: outputPath }, (error) => {
-//       if (error) {
-//         reject(error);
-//       } else {
-//         resolve();
-//       }
-//     });
-//   });
-// }
-
 function extractZipFile(zipPath, outputPath) {
   const zip = new AdmZip(zipPath);
   zip.extractAllTo(outputPath, true);
 }
 
 (async () => {
-  if (folderExists(publicFolderPath)) {
-    console.log("Public folder already exists. Skipping download and extraction.");
-  } else {
-    try {
-      console.log("Creating public folder...");
-      fs.mkdirSync(publicFolderPath);
-
-      console.log("Downloading zip file...");
-      await downloadFile(downloadUrl, destinationPath);
+  try {
+    if (!folderExists(chunksFolderPath)) {
+      console.log("Downloading chunks.zip file...");
+      await downloadFile(chunksUrl, chunksDestinationPath);
       console.log("Download complete.");
 
-      console.log("Extracting zip file...");
-      await extractZipFile(destinationPath, path.resolve('./'));
+      console.log("Extracting chunks.zip file...");
+      await extractZipFile(chunksDestinationPath, path.resolve('./'));
       console.log("Extraction complete.");
 
-      console.log("Removing zip file...");
-      fs.unlinkSync(destinationPath);
-      console.log("Zip file removed.");
-
-      if (folderExists(macosxFolderPath)) {
-        console.log("Removing __MACOSX folder...");
-        await removeFolder(macosxFolderPath);
-        console.log("__MACOSX folder removed.");
-      }
-
-      console.log("Done.");
-    } catch (error) {
-      console.error("An error occurred:", error);
-      process.exit(1);
+      console.log("Removing chunks.zip file...");
+      fs.unlinkSync(chunksDestinationPath);
+      console.log("chunks.zip file removed.");
+    } else {
+      console.log("Chunks folder already exists. Skipping download and extraction.");
     }
+
+    if (!folderExists(videosFolderPath)) {
+      console.log("Creating videos folder...");
+      if (!fs.existsSync('./public')) fs.mkdirSync('./public');
+      fs.mkdirSync(videosFolderPath);
+
+      console.log("Downloading videos.zip file...");
+      await downloadFile(videosUrl, videosDestinationPath);
+      console.log("Download complete.");
+
+      console.log("Extracting videos.zip file...");
+      await extractZipFile(videosDestinationPath, videosFolderPath);
+      console.log("Extraction complete.");
+
+      console.log("Removing videos.zip file...");
+      fs.unlinkSync(videosDestinationPath);
+      console.log("videos.zip file removed.");
+    } else {
+      console.log("Videos folder already exists. Skipping download and extraction.");
+    }
+
+    console.log("Done.");
+  } catch (error) {
+    console.error("An error occurred:", error);
+    process.exit(1);
   }
 })();

@@ -265,7 +265,7 @@ const RadarChart = () => {
         size="small"
         value={numAxes}
         onChange={(event) => setNumAxes(event.target.value)}
-        inputProps={{ min: 4, max: 29 }}
+        inputProps={{ min: 4, max: 30 }}
         style={{ width: '70px' }}
       />
       <svg viewBox={"0 0 " + 600 + " " + 400} ref={chartRef} />

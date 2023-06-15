@@ -135,6 +135,7 @@ const useWalks = create((set, get) => ({
       state.direction = direction;
       state.loading = true;
       state.walks = [];
+      state.selectedWalks = [];
     }));
 
     get().getWalks(space, direction);
