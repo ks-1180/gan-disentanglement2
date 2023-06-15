@@ -1,9 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import useWalks from "@component/stores/walks";
+import { CHART_COLORS } from "./colors";
 
 const generateScatterplot = (ref, walks, selectedWalks, setSelectedWalks) => {
-    const margin = { top: 20, right: 60, bottom: 30, left: 40 };
+
+    const primary = CHART_COLORS.primary;
+    const secondary = CHART_COLORS.secondary;
+
+    const margin = { top: 25, right: 60, bottom: 30, left: 40 };
     const width = 600 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
 
@@ -37,6 +42,13 @@ const generateScatterplot = (ref, walks, selectedWalks, setSelectedWalks) => {
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
 
+    svg.append("text")
+        .attr("x", (width / 2) + margin.left)
+        .attr("y", margin.top / 2)
+        .attr("text-anchor", "middle")
+        .style("font-size", "15px")
+        .text("Umap");
+
     const g = svg
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -51,10 +63,10 @@ const generateScatterplot = (ref, walks, selectedWalks, setSelectedWalks) => {
 
         svg
             .selectAll('.scatterplot-circle')
-            .attr('fill', d => (newSelectedWalks.includes(d.walk) ? "#f44336" : "#009688"));
+            .attr('fill', d => (newSelectedWalks.includes(d.walk) ? primary : secondary));
 
         d3.select(event.currentTarget)
-            .attr('fill', "#f44336")
+            .attr('fill', primary)
     }
 
     const brush = d3.brush()
@@ -72,7 +84,7 @@ const generateScatterplot = (ref, walks, selectedWalks, setSelectedWalks) => {
             }
             // update the fill of circles
             g.selectAll('.scatterplot-circle')
-                .attr('fill', d => selectedWalks.includes(d.walk) ? "#f44336" : "#009688");
+                .attr('fill', d => selectedWalks.includes(d.walk) ? primary : secondary);
         });
 
     g.append("g")
@@ -88,7 +100,7 @@ const generateScatterplot = (ref, walks, selectedWalks, setSelectedWalks) => {
         .attr("cx", (d) => xScale(+d['umap'][0]))
         .attr("cy", (d) => yScale(+d['umap'][1]))
         .attr("r", 4)
-        .attr("fill", (d) => (selectedWalks.includes(d.walk) ? "#f44336" : "#009688")) // Change fill color based on condition
+        .attr("fill", (d) => (selectedWalks.includes(d.walk) ? primary : secondary)) // Change fill color based on condition
         .on("click", handleClick)
         .attr("class", "scatterplot-circle");
 };

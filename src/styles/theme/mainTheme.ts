@@ -5,9 +5,14 @@ const themeOptions: ThemeOptions = {
     mode: 'light',
     primary: {
       main: "#009688"
+      //main: '#112940' // blue/red
+      //main: '#48c1a6' //naturals 
     },
     secondary: {
-      main: "#d4d4d4"
+      main: '#d4d4d4'
+      //main: "#b9625a" // grey/orange
+      //main: '#91d9d8' // blue/red
+      //main: '#f26058' // naturals
     }
   },
   typography: {

@@ -6,9 +6,13 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import useWalk from "@component/stores/walk";
 import useWalks from "@component/stores/walks";
+import { CHART_COLORS } from "./colors";
 
 const generateScatterplot = (ref, walks, selectedWalks) => {
-    const margin = { top: 20, right: 60, bottom: 30, left: 40 };
+    const primary = CHART_COLORS.primary;
+    const secondary = CHART_COLORS.secondary;
+
+    const margin = { top: 20, right: 60, bottom: 40, left: 55 };
     const width = 600 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
 
@@ -61,6 +65,28 @@ const generateScatterplot = (ref, walks, selectedWalks) => {
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
+    svg.append("text")
+        .attr("x", (width / 2))
+        .attr("y", margin.top / 2)
+        .attr("text-anchor", "middle")
+        .style("font-size", "15px")
+        .text("Regression");
+
+    svg.append("text")
+        .attr("x", margin.left / 2)
+        .attr("y", height / 2 - 70)
+        .attr("text-anchor", "middle")
+        .attr("transform", "rotate(-90,"+margin.left/2+","+height/2+")") // rotate the text to make it vertical
+        .style("font-size", "12px")
+        .text("slope");
+
+    svg.append("text")
+        .attr("x", (width / 2))
+        .attr("y", height + 35)
+        .attr("text-anchor", "middle")
+        .style("font-size", "12px")
+        .html("R<tspan dy='-5px' style='font-size: 9px;'>2</tspan>");
+
     svg
         .selectAll("circle")
         .data(data)
@@ -69,7 +95,7 @@ const generateScatterplot = (ref, walks, selectedWalks) => {
         .attr("cx", (d) => xScale(+d.r2))
         .attr("cy", (d) => yScale(+d.slope))
         .attr("r", 3)
-        .attr("fill", (d) => (selectedWalks.includes(d.walk) ? "#f44336" : "#009688")) // Change fill color based on condition
+        .attr("fill", (d) => (selectedWalks.includes(d.walk) ? primary : secondary)) // Change fill color based on condition
         .attr("opacity", 0.5)
         .attr("class", "scatterplot-circle");
 

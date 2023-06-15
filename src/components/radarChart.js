@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import useWalk from '@component/stores/walk';
-import walk from '@component/pages/api/walk';
+import { CHART_COLORS } from './colors';
 
 function radarX(radius, index, angle) {
   return radius * Math.cos(radarAngle(angle, index));
@@ -57,6 +57,9 @@ function topAttributes(data, start, end, numAxis) {
 }
 
 const generateRadarChart = (ref, walkData, start, end) => {
+  const primary = CHART_COLORS.primary;
+  const secondary = CHART_COLORS.secondary;
+
   const width = 600;
   const height = 400;
   const scaleR = 200;
@@ -152,7 +155,7 @@ const generateRadarChart = (ref, walkData, start, end) => {
         .attr("x2", function (d, i) { return radarX(axisRadius(l), i + 1, radarAxisAngle); })
         .attr("y2", function (d, i) { return radarY(axisRadius(l), i + 1, radarAxisAngle); })
         .attr("class", "line")
-        .attr("stroke", "#d3d3d3")
+        .attr("stroke", CHART_COLORS.light_grey)
         .attr("stroke-width", 1.5)
     );
 
@@ -171,7 +174,7 @@ const generateRadarChart = (ref, walkData, start, end) => {
       .attr("x2", function (d, i) { return radarX(axisRadius(maxAxisRadius), i, radarAxisAngle); })
       .attr("y2", function (d, i) { return radarY(axisRadius(maxAxisRadius), i, radarAxisAngle); })
       .attr("class", "line")
-      .style("stroke", "#d3d3d3")
+      .style("stroke", CHART_COLORS.light_grey)
       .attr("stroke-width", 1.5);
 
     svg.selectAll('.axisLabel')
@@ -183,12 +186,11 @@ const generateRadarChart = (ref, walkData, start, end) => {
       .attr("x", function (d, i) { return radarX(axisRadius(textRadius), i, radarAxisAngle); })
       .attr("y", function (d, i) { return radarY(axisRadius(textRadius), i, radarAxisAngle); })
       .style("font-size", "12px")
-      .style("fill", "#009688")
+      .style("fill", CHART_COLORS.axis)
       .text(function (d, i) { return dimensions[i].replaceAll('_', ' '); });
 
     // render polylines
-    //const color = ['#b2dfdb', '#7c9c99'];
-    const color = ['#7c9c99', '#ff9100'];
+    const color = [CHART_COLORS.radar_secondary, CHART_COLORS.radar_primary];
     const data1 = [data[0]];
 
 
