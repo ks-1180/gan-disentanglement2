@@ -8,10 +8,23 @@ import DialogContentText from "@mui/material/DialogContentText";
 import { Box, Chip, Divider, Grid, Typography } from "@mui/material";
 import useWalks from "../stores/walks";
 
+
+/**
+ * Categories attributes for better overview. 
+ * Array of general attributes.
+ *
+ * @type {Array}
+ */
 const generalAtt = [
   { label: "Male", value: "Male" },
   { label: "Young", value: "Young" },
 ];
+
+/**
+ * Array of face feature attributes.
+ *
+ * @type {Array}
+ */
 const faceFeaturesAtt = [
   { label: "Arched Eyebrows", value: "Arched_Eyebrows" },
   { label: "Bushy Eyebrows", value: "Bushy_Eyebrows" },
@@ -22,6 +35,12 @@ const faceFeaturesAtt = [
   { label: "Mouth Slightly Open", value: "Mouth_Slightly_Open" },
   { label: "Smiling", value: "Smiling" },
 ];
+
+/**
+ * Array of hair attributes.
+ *
+ * @type {Array}
+ */
 const hairAtt = [
   { label: "Black Hair", value: "Black_Hair" },
   { label: "Blond Hair", value: "Blond_Hair" },
@@ -33,12 +52,24 @@ const hairAtt = [
   { label: "Receding Hairline", value: "Receding_Hairline" },
   { label: "Bald", value: "Bald" },
 ];
+
+/**
+ * Array of facial hair attributes.
+ *
+ * @type {Array}
+ */
 const facialHairAtt = [
   { label: "No Beard", value: "No_Beard" },
   { label: "Goatee", value: "Goatee" },
   { label: "Mustache", value: "Mustache" },
   { label: "Sideburns", value: "Sideburns" },
 ];
+
+/**
+ * Array of accessories attributes.
+ *
+ * @type {Array}
+ */
 const accessoiresAtt = [
   { label: "Eyeglasses", value: "Eyeglasses" },
   { label: "Heavy Makeup", value: "Heavy_Makeup" },
@@ -47,6 +78,11 @@ const accessoiresAtt = [
   { label: "Wearing Lipstick", value: "Wearing_Lipstick" },
 ];
 
+/**
+ * Renders the filter dialog component. Here the user selects the attribute for the direction of the walks. 
+ *
+ * @returns {JSX.Element} - The FilterDialog component.
+ */
 export function FilterDialog() {
 
   const direction = useWalks(state=>state.direction);

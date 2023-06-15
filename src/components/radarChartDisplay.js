@@ -1,7 +1,11 @@
-import { Card, CardContent, CardMedia, Slider } from "@mui/material";
+import { Card, CardContent} from "@mui/material";
 import RadarChart from "@component/components/radarChart";
 
-export function RadarChartDisplay(props) {
+/**
+ * Display component for the RadarChart.
+ * @returns {JSX.Element} - The RadarChartDisplay component.
+ */
+export function RadarChartDisplay() {
     return (
         <Card
           sx={{
@@ -11,7 +15,7 @@ export function RadarChartDisplay(props) {
           }}
         >
           <CardContent sx={{ flexGrow: 1}}>
-            <RadarChart {...props}/>
+            <RadarChart/>
           </CardContent>
         </Card>
       );

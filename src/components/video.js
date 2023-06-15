@@ -6,6 +6,12 @@ import { Box } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import useWalk from '@component/stores/walk';
 
+/**
+ * VideoCard component for walk animation.
+ * Displays a card with a video player and play/pause button.
+ * @param {string} path - The path to the video file.
+ * @returns {JSX.Element} VideoCard component.
+ */
 export default function VideoCard({ path }) {
     const videoRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false); // New state for Play and Pause
@@ -15,6 +21,9 @@ export default function VideoCard({ path }) {
     const end = useWalk(state => state.end);
     const videoPath = path;
 
+    /**
+     * Toggles between play and pause of the video.
+     */
     const togglePlayPause = () => { // New method for Play and Pause
         if (isPlaying) {
             videoRef.current.pause();

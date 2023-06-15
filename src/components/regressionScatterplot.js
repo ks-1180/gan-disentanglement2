@@ -10,6 +10,9 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
+/**
+ * Styled component for custom HTML tooltip.
+ */
 const HtmlTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
   ))(({ theme }) => ({
@@ -22,6 +25,12 @@ const HtmlTooltip = styled(({ className, ...props }) => (
     },
   }));
 
+/**
+ * Generates the scatterplot chart using D3.
+ * @param {React.Ref} ref - Reference to the chart container element for the svg.
+ * @param {Array} walks - Array of walk data.
+ * @param {Array} selectedWalks - Array of selected walks to change color for selected data points in the umap.
+ */
 const generateScatterplot = (ref, walks, selectedWalks) => {
     const primary = CHART_COLORS.primary;
     const secondary = CHART_COLORS.secondary;
@@ -111,16 +120,16 @@ const generateScatterplot = (ref, walks, selectedWalks) => {
     svg.append("g").call(yAxis);
 };
 
+/**
+ * Scatterplot component displaying the regression data.
+ * For each walk, the slope of all 30 attributes are calculated and displayed.
+ * @returns {JSX.Element} Scatterplot component.
+ */
 const RegressionScatterplot = () => {
     const chartRef = useRef();
 
     const walks = useWalks(state => state.walks);
     const selectedWalks = useWalks(state => state.selectedWalks);
-
-    const handleClick = (event, d) => {
-        // your code to handle click event
-        // setWalk(d.walk);
-    };
 
     useEffect(() => {
         if(walks){
