@@ -1,7 +1,11 @@
 import { Card, CardContent, CardMedia, Slider } from "@mui/material";
 import Scatterplot from "@component/components/umapScatterplot";
 
-export function UmapDisplay(props) {
+/**
+ * UMAP Display component. Show the umap projection of all walks for a selected direction.
+ * @returns {JSX.Element} UMAP Display component.
+ */
+export function UmapDisplay() {
     return (
         <Card
           sx={{
@@ -11,7 +15,7 @@ export function UmapDisplay(props) {
           }}
         >
           <CardContent sx={{ flexGrow: 1 }}>
-            <Scatterplot {...props}/>
+            <Scatterplot/>
           </CardContent>
         </Card>
       );

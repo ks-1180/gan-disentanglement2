@@ -5,6 +5,11 @@ import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
 import { useRouter } from 'next/router';
 
+/**
+ * Array of image objects with their URLs, titles, and routes.
+ *
+ * @type {Array}
+ */
 const images = [
     {
         url: 'https://source.unsplash.com/random?wallpapers',
@@ -18,6 +23,9 @@ const images = [
     },
 ];
 
+/**
+ * Custom styled component for the image button.
+ */
 const ImageButton = styled(ButtonBase)(({ theme }) => ({
     position: 'relative',
     height: 200,
@@ -39,6 +47,9 @@ const ImageButton = styled(ButtonBase)(({ theme }) => ({
     },
 }));
 
+/**
+ * Custom styled component for the image source.
+ */
 const ImageSrc = styled('span')({
     position: 'absolute',
     left: 0,
@@ -49,6 +60,9 @@ const ImageSrc = styled('span')({
     backgroundPosition: 'center 40%',
 });
 
+/**
+ * Custom styled component for the image.
+ */
 const Image = styled('span')(({ theme }) => ({
     position: 'absolute',
     left: 0,
@@ -61,6 +75,9 @@ const Image = styled('span')(({ theme }) => ({
     color: theme.palette.common.white,
 }));
 
+/**
+ * Custom styled component for the image backdrop.
+ */
 const ImageBackdrop = styled('span')(({ theme }) => ({
     position: 'absolute',
     left: 0,
@@ -72,6 +89,9 @@ const ImageBackdrop = styled('span')(({ theme }) => ({
     transition: theme.transitions.create('opacity'),
 }));
 
+/**
+ * Custom styled component for the marked image.
+ */
 const ImageMarked = styled('span')(({ theme }) => ({
     height: 3,
     width: 18,
@@ -82,9 +102,19 @@ const ImageMarked = styled('span')(({ theme }) => ({
     transition: theme.transitions.create('opacity'),
 }));
 
+/**
+ * Component that renders a grid of image buttons.
+ *
+ * @returns {JSX.Element} - The ButtonBases component.
+ */
 export default function ButtonBases() {
     const router = useRouter();
 
+    /**
+     * Renders image buttons based on the data in the 'images' array.
+     *
+     * @returns {Array<JSX.Element>} - Array of image buttons.
+     */
     const imageButtons = images.map((image) => {
         return (
             <Grid item md={6} key={image.title}>

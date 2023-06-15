@@ -3,6 +3,14 @@ import * as d3 from 'd3';
 import useWalks from '@component/stores/walks';
 import { CHART_COLORS } from './colors';
 
+/**
+ * Generates a line chart based on the provided data, attribute, and selected walks.
+ *
+ * @param {object} ref - The reference to the chart container.
+ * @param {Array} data - The data used to generate the chart.
+ * @param {string} attribute - Name of the changing attribute in the selected direction.
+ * @param {Array} selectedWalks - Walk selection for filtering (selected in umapScatterplot).
+ */
 const generateLineChart = (ref, data, attribute, selectedWalks) => {
     const primary = CHART_COLORS.primary;
     const secondary = CHART_COLORS.secondary;
@@ -80,10 +88,6 @@ const generateLineChart = (ref, data, attribute, selectedWalks) => {
         .domain([-1, 1])
         .range([180, margin.top]);
 
-    /* svg.append('g')
-        .attr('transform', `translate(${margin.left}, 0)`)
-        .call(d3.axisLeft(yScale)); */
-
     const line = d3
         .line()
         .x((d, i) => xScale(i))
@@ -145,28 +149,15 @@ const generateLineChart = (ref, data, attribute, selectedWalks) => {
         .attr("y2", height)    // y position of the second end of the line
         .attr("stroke-width", 1)
         .attr("stroke", light_grey);
-
-    /*const walk = [
-        { time: 0, value: 3.182290674885735e-05 },
-        { time: 1, value: 1.7956683362463366e-10 },
-        { time: 2, value: 0.014266058802604675 },
-        { time: 3, value: 0.09211558848619461 },
-        { time: 4, value: 6.395691161742434e-05 }
-    ];
-    svg
-        .append('path')
-        .datum(walk)
-        .attr('fill', 'none')
-        .attr('stroke', 'steelblue')
-        .attr('stroke-width', 1.5)
-        .attr('d', line)*/
-
-    // show x-axis
-    /*svg.append('g')
-        .attr('transform', `translate(0, ${innerHeight})`)
-        .call(d3.axisBottom(xScale))*/
 }
 
+/**
+ * LineChart component displays a line chart based on the provided attribute.
+ *
+ * @param {object} props - The component props.
+ * @param {string} props.attribute - The changing attribute for the line chart.
+ * @returns {JSX.Element} - The LineChart component, displaying a linechart for a single attribute for a selection of walks.
+ */
 export function LineChart({attribute}) {
     const chartRef = useRef();
     const walks = useWalks(state=>state.walks);
@@ -176,22 +167,6 @@ export function LineChart({attribute}) {
     useEffect(() => {
         generateLineChart(chartRef, walks, attribute, selectedWalks);
     }, [walks, attribute, selectedWalks]);
-
-    // useEffect(() => {
-    //     const path = `/radar/${direction.value}.csv`;
-    //     d3.csv(path).then((data) => {
-    //         setData(data);
-    //         setIsDataLoaded(true);
-    //     });
-
-    //     const path2 = `/regression/${attribute}.csv`
-    //     d3.csv(path2).then((slopes) => {
-    //         setSlopes(slopes);
-    //         setIsDataLoaded(true);
-    //     });
-    //     
-    // }, [direction]);
-
 
     return (
         <svg viewBox={'0 0' + 800 + " " + 400} style={{width: '300px', height: '110px'}} ref={chartRef}/>

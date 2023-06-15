@@ -1,5 +1,3 @@
-
-
 const ORIGINAL = {
     'primary': '#ff9100',
     'secondary': '#009688',

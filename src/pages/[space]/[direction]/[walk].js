@@ -12,8 +12,6 @@ import Copyright from '@component/components/copyright';
 import { Card, CardContent, CardMedia, Slider } from "@mui/material";
 import { RadarChartDisplay } from "@component/components/radarChartDisplay";
 import VideoCard from '@component/components/video';
-import { WalkDisplay } from "@component/components/walkDisplay";
-import { PrismaClient } from '@prisma/client';
 import useWalk from '@component/stores/walk';
 
 function linspace(start, end, n) {

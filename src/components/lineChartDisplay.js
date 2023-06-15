@@ -4,10 +4,21 @@ import { Card, CardContent } from "@mui/material";
 import { LineChart } from "@component/components/lineChart";
 import { useState } from "react";
 
+/**
+ * Renders the LineChartDisplay component. 
+ * Here we iterate over all attributes to generate a line chart with slope histograms for each of them. 
+ *
+ * @returns {JSX.Element} - The LineChartDisplay component.
+ */
 export function LineChartDisplay() {
 
     const [showMore, setShowMore] = useState(false);
 
+    /**
+     * Array of attributes to display line charts for.
+     *
+     * @type {Array<string>}
+     */
     const attributes = [
         "Arched_Eyebrows",
         "Bags_Under_Eyes",
@@ -19,7 +30,7 @@ export function LineChartDisplay() {
         "Brown_Hair",
         "Bushy_Eyebrows",
         "Chubby", // 10
-        /*"Double_Chin",
+        "Double_Chin",
         "Eyeglasses",
         "Goatee",
         "Grey_Hair",
@@ -38,7 +49,7 @@ export function LineChartDisplay() {
         "Wearing_Earrings",
         "Wearing_Hat",
         "Wearing_Lipstick",
-        "Young"*/
+        "Young"
     ]
 
     return (

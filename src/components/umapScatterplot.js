@@ -8,6 +8,9 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import useWalks from "@component/stores/walks";
 import { CHART_COLORS } from "./colors";
 
+/**
+ * Styled component for custom HTML tooltip.
+ */
 const HtmlTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
   ))(({ theme }) => ({
@@ -20,6 +23,13 @@ const HtmlTooltip = styled(({ className, ...props }) => (
     },
   }));
 
+/**
+ * Generates the scatterplot chart for umap projection.
+ * @param {Object} ref - The reference to the chart container holding the svgs.
+ * @param {Array} walks - The array of walks data.
+ * @param {Array} selectedWalks - The array of selected walks to color the selection made by the user through brushing or clicking.
+ * @param {Function} setSelectedWalks - The function to set the selected walks to save for other charts.
+ */
 const generateScatterplot = (ref, walks, selectedWalks, setSelectedWalks) => {
 
     const primary = CHART_COLORS.primary;
@@ -66,7 +76,11 @@ const generateScatterplot = (ref, walks, selectedWalks, setSelectedWalks) => {
     g.append("g").attr("transform", `translate(0,${height})`).call(xAxis);
     g.append("g").call(yAxis);
 
-    // click event listener
+    /**
+     * Click event handler for scatterplot circles.
+     * @param {Object} event - The click event object.
+     * @param {Object} d - The data associated with the clicked circle.
+     */
     const handleClick = (event, d) => {
         const newSelectedWalks = [d.walk];
         setSelectedWalks(newSelectedWalks);
@@ -115,6 +129,11 @@ const generateScatterplot = (ref, walks, selectedWalks, setSelectedWalks) => {
         .attr("class", "scatterplot-circle");
 };
 
+/**
+ * UMAP Scatterplot component.
+ * Displays the UMAP scatterplot chart.
+ * @returns {JSX.Element} UMAP scatterplot component.
+ */
 const Scatterplot = () => {
     const chartRef = useRef();
 

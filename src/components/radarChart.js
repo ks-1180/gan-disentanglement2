@@ -3,18 +3,48 @@ import * as d3 from 'd3';
 import useWalk from '@component/stores/walk';
 import { CHART_COLORS } from './colors';
 
+/**
+ * Calculates the x-coordinate for a point on the radar chart.
+ *
+ * @param {number} radius - The radius of the point.
+ * @param {number} index - The index of the point.
+ * @param {number} angle - The angle of the point.
+ * @returns {number} - The x-coordinate of the point.
+ */
 function radarX(radius, index, angle) {
   return radius * Math.cos(radarAngle(angle, index));
 }
 
+/**
+ * Calculates the y-coordinate for a point on the radar chart.
+ *
+ * @param {number} radius - The radius of the point.
+ * @param {number} index - The index of the point.
+ * @param {number} angle - The angle of the point.
+ * @returns {number} - The y-coordinate of the point.
+ */
 function radarY(radius, index, angle) {
   return radius * Math.sin(radarAngle(angle, index));
 }
 
+/**
+ * Calculates the angle for a point on the radar chart.
+ *
+ * @param {number} angle - The angle of the point.
+ * @param {number} index - The index of the point.
+ * @returns {number} - The angle for the point.
+ */
 function radarAngle(angle, index) {
   return angle * index - Math.PI / 2;
 }
 
+/**
+ * Scales a point based on the index and value.
+ *
+ * @param {number} index - The index of the point.
+ * @param {number} point - The value of the point.
+ * @returns {number} - The scaled point.
+ */
 function scale(index, point) {
   let s = d3.scaleLinear()
     .domain([0, 5])
@@ -22,6 +52,17 @@ function scale(index, point) {
   return s(point);
 }
 
+/**
+ * Selects the top attributes for the radar chart.
+ * The higher the absolute difference between the start and end value the more relevent it is.
+ * Additonally sort, so that the first most relevant are positive and the later are negagive changes. 
+ *
+ * @param {Object} data - The data object.
+ * @param {number} start - The start index.
+ * @param {number} end - The end index.
+ * @param {number} numAxis - The number of axis to display.
+ * @returns {Object} - The selected attributes data.
+ */
 function topAttributes(data, start, end, numAxis) {
   if (start < 0 || start > end || end >= data.attributes[0].steps.length) {
     return "Invalid start or end index";
@@ -56,6 +97,16 @@ function topAttributes(data, start, end, numAxis) {
   };
 }
 
+/**
+ * Generates the radar chart. 
+ * The first polyline displays the start values of the most relevent attributes. 
+ * The second displays the end state. 
+ *
+ * @param {Object} ref - The chart reference object for svg.
+ * @param {Object} walkData - The data of the walks.
+ * @param {number} start - The start index of the walk.
+ * @param {number} end - The end index of the walk.
+ */
 const generateRadarChart = (ref, walkData, start, end) => {
   const primary = CHART_COLORS.primary;
   const secondary = CHART_COLORS.secondary;
@@ -178,11 +229,13 @@ const generateRadarChart = (ref, walkData, start, end) => {
 
 }
 
-
-
+/**
+ * Generate the radar chart when the walk data is available or when the start and end indices change.
+ *
+ * @returns {JSX.Element} - The RadarChart component, displaying a radarchart for a number of attribute for a single walks.
+ */
 const RadarChart = () => {
   const chartRef = useRef();
-  const legendRef = useRef();
 
   const walkData = useWalk(state => state.walkData);
   const start = useWalk(state => state.start);

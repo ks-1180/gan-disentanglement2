@@ -5,14 +5,11 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Link from "@mui/material/Link";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import { Button, Card, CardContent, CardMedia, Slider } from "@mui/material";
 import Stack from "@mui/material/Stack";
 
-import { WalkDisplay } from "@component/components/walkDisplay";
 import { FilterDialog } from "@component/components/filterDialog";
-import { RadarChartDisplay } from "@component/components/radarChartDisplay";
 import { UmapDisplay } from "@component/components/umapDisplay";
 import RegressionScatterplot from "@component/components/regressionScatterplot";
 import Copyright from "@component/components/copyright";
@@ -25,7 +22,6 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 
 export default function PaperPage() {
 
