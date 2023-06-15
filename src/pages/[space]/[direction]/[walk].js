@@ -14,6 +14,13 @@ import { RadarChartDisplay } from "@component/components/radarChartDisplay";
 import VideoCard from '@component/components/video';
 import useWalk from '@component/stores/walk';
 
+/**
+ * Generate an array of equally spaced numbers.
+ * @param {number} start - The start value.
+ * @param {number} end - The end value.
+ * @param {number} n - The number of values.
+ * @returns {number[]} The array of equally spaced numbers.
+ */
 function linspace(start, end, n) {
     const diff = end - start;
     const step = diff / (n - 1);
@@ -61,6 +68,15 @@ const ImageStripe = ({ videos, path }) => {
     );
 }
 
+/**
+ * Walk component for detailed exploration of a single walk.
+ * Displays the walk visualization.
+ * @param {Object} props - The component props.
+ * @param {string} props.space - The space value (either z (latent) or w (style) space).
+ * @param {string} props.direction - The direction value.
+ * @param {string} props.walk - The walk index.
+ * @returns {JSX.Element} Walk component.
+ */
 const Walk = ({ space, direction, walk }) => {
     const router = useRouter();
     const setSpaceDirectionWalk = useWalk(state => state.setSpaceDirectionWalk);
@@ -79,6 +95,9 @@ const Walk = ({ space, direction, walk }) => {
         }
     });
 
+    /**
+     * Update the video players' current time based on the slider values.
+     */
     useEffect(() => {
         const startSec = start / 20;
         const endSec = end / 20;
@@ -95,6 +114,13 @@ const Walk = ({ space, direction, walk }) => {
     }, [start, end, ...videos.map(video => video.ref)]);
 
     const minDistance = 1;
+
+    /**
+     * Handle the slider change event to select start and end of walk.
+     * @param {Object} event - The event object.
+     * @param {number[]} newValue - The new slider values.
+     * @param {number} activeThumb - The active thumb index.
+     */
     const handleSlider = (event, newValue, activeThumb) => {
         if (!Array.isArray(newValue)) {
             return;

@@ -23,6 +23,11 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 
+/**
+ * PaperPage component.
+ * Renders the reimplementation of the visualization presented in the chosen paper.
+ * @returns {JSX.Element} PaperPage component.
+ */
 export default function PaperPage() {
 
   const direction = useWalks(state=>state.direction);

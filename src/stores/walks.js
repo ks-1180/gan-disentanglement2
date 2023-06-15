@@ -2,6 +2,11 @@ import { create } from "zustand";
 import { produce } from "immer";
 import * as simpleStatistics from "simple-statistics";
 
+/**
+ * Calculates linear regression for each attribute in the walk.
+ * @param {object} walk - The walk object.
+ * @returns {object} - The updated walk object with regression values.
+ */
 const calculateLinearRegressions = (walk) => {
   walk.attributes.forEach((attribute) => {
     const scores = attribute.steps;
@@ -17,8 +22,13 @@ const calculateLinearRegressions = (walk) => {
   return walk;
 };
 
+// Create an instance of AbortController for cancelling fetch requests
 let controller = new AbortController();
 
+/**
+ * Custom store for managing walks-related data and actions.
+ * Uses Zustand library for state management.
+ */
 const useWalks = create((set, get) => ({
   space: 'z',
   direction: 'Eyeglasses',
@@ -27,20 +37,53 @@ const useWalks = create((set, get) => ({
   loading: false,
   error: false,
   errorMessage: '',
+
+  /**
+   * Sets the selected walks.
+   * @param {Array} selectedWalks - The array of selected walks.
+   */
   setSelectedWalks: (selectedWalks) => set(produce(state => { state.selectedWalks = selectedWalks })),
+
+  /**
+   * Sets the loading state.
+   * @param {boolean} loading - The loading state value.
+   */
   setLoading: (loading) => set(produce(state => { state.loading = loading })),
+
+  /**
+   * Sets the error state and error message.
+   * @param {boolean} error - The error state value.
+   * @param {string} errorMessage - The error message.
+   */
   setError: (error, errorMessage) => set(produce(state => {
     state.error = error;
     state.errorMessage = errorMessage;
   })),
+
+  /**
+   * Sets the space value (z or w) and triggers the fetch for corresponding walks.
+   * @param {string} space - The space value.
+   */
   setSpace: async (space) => {
     const { direction } = get();
     await get().setSpaceAndDirection(space, direction);
   },
+  
+  /**
+   * Sets the direction value and triggers the fetch for corresponding walks.
+   * @param {string} direction - The direction value.
+   */
   setDirection: async (direction) => {
     const { space } = get();
     await get().setSpaceAndDirection(space, direction);
   },
+
+  /**
+   * Fetches walks data from the API based on space, direction, and number of chunks.
+   * @param {string} space - The space value.
+   * @param {string} direction - The direction value.
+   * @param {number} chunks - The number of chunks.
+   */
   getWalks: async (space, direction, chunks = 10) => {
     set(produce(state => {
       state.loading = true;
@@ -81,6 +124,12 @@ const useWalks = create((set, get) => ({
       }));
     }
   },
+
+  /**
+   * Sets the space and direction values and triggers the fetch for corresponding walks.
+   * @param {string} space - The space value.
+   * @param {string} direction - The direction value.
+   */
   setSpaceAndDirection: (space, direction) => {
     controller.abort();
     controller = new AbortController();

@@ -3,6 +3,10 @@ import { produce } from "immer";
 
 let controller = new AbortController()
 
+/**
+ * Custom store for managing walk-related data and actions.
+ * Uses Zustand library for state management.
+ */
 const useWalk = create((set, get) => ({
     space: 'z',
     direction: 'Eyeglasses',
@@ -14,21 +18,36 @@ const useWalk = create((set, get) => ({
     start: 0,
     current: 10,
     end: 99,
+    /**
+     * Sets the start value for the walk sequence.
+     * @param {number} start - The start value.
+     */
     setStart: (start) => {
         set(produce(state => {
             state.start = start
         }));
     },
+    /**
+     * Sets the current value.
+     * @param {number} current - The current value.
+     */
     setCurrent: (current) => {
         set(produce(state => {
             state.current = current
         }));
     },
+    /**
+     * Sets the end value.
+     * @param {number} end - The end value.
+     */
     setEnd: (end) => {
         set(produce(state => {
             state.end = end
         }));
     },
+    /**
+     * Fetches walk data from the API.
+     */
     getWalk: async () => {
         set(produce(state => {
             state.loading = true;
@@ -58,6 +77,12 @@ const useWalk = create((set, get) => ({
             }));
         }
     },
+    /**
+     * Sets the space, direction, and walk values and fetches the corresponding walk data. 
+     * @param {string} space - The space value. Either z (latent) or w (style) space.
+     * @param {string} direction - The direction value. One of 30 possible attributes. 
+     * @param {number} walk - The walk value (Index of the walk).
+     */
     setSpaceDirectionWalk: (space, direction, walk) => {
         controller.abort();
         controller = new AbortController();
