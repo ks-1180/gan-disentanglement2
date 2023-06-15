@@ -12,7 +12,7 @@ export default async (req, res) => {
 
   try {
     // Construct the path to the required JSON file
-    const filePath = path.join(process.cwd(), `chunks/${space}/${direction}/${chunk}.json`);
+    const filePath = path.join(process.cwd(), `public/chunks/${space}/${direction}/${chunk}.json`);
 
     // Check if the file exists
     if (!fs.existsSync(filePath)) {

@@ -5,9 +5,9 @@ const AdmZip = require("adm-zip");
 
 const chunksUrl = "https://owncloud.tuwien.ac.at/index.php/s/ei5F6KJyZYtFQ1j/download";
 const videosUrl = "https://owncloud.tuwien.ac.at/index.php/s/rRHxMg4FcOg8RNA/download";
-const chunksDestinationPath = path.resolve("./chunks.zip");
+const chunksDestinationPath = path.resolve("./public/chunks.zip");
 const videosDestinationPath = path.resolve("./public/videos.zip");
-const chunksFolderPath = path.resolve("./chunks");
+const chunksFolderPath = path.resolve("./public/chunks");
 const videosFolderPath = path.resolve("./public/videos");
 
 function folderExists(folderPath) {
