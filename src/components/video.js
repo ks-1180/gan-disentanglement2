@@ -12,6 +12,7 @@ export default function VideoCard({ path }) {
     // const end = useWalk(state => state.end);
     const setCurrent = useWalk(state => state.setCurrent);
     const current = useWalk(state => state.current);
+    const end = useWalk(state => state.end);
     const videoPath = path;
 
     const togglePlayPause = () => { // New method for Play and Pause
@@ -34,9 +35,10 @@ export default function VideoCard({ path }) {
 
             video.ontimeupdate = () => {
                 let currentUpdateTime = video.currentTime * 20;
-                if(currentUpdateTime>99){
+                if (currentUpdateTime > end) {
                     setIsPlaying(false);
-                    setCurrent(99);
+                    setCurrent(end);
+                    video.pause();
                 } else {
                     setCurrent(Math.floor(currentUpdateTime));
                 }

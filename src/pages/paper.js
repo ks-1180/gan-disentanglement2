@@ -34,11 +34,12 @@ export default function PaperPage() {
 
   const router = useRouter();
 
-  let path = `/walks/${direction}/${selectedWalks[0]}.jpg`;
 
-  if (!selectedWalks.length) {
-    path = `/walks/${direction}/1.jpg`;
+  let walk = 1;
+  if (selectedWalks.length>0) {
+    walk = selectedWalks[0];
   }
+  const path = `/walks/${direction}/${walk}.jpg`;
 
   const walks = useWalks(state => state.walks);
 
@@ -98,7 +99,7 @@ export default function PaperPage() {
                         <FormControlLabel value="w" control={<Radio />} label="style space (w)" />
                       </RadioGroup>
                     </FormControl>
-                    <Button variant="contained" onClick={() => { router.push(`paper/${direction.value}/${walk}`) }}>Explore Single Walk</Button>
+                    <Button variant="contained" onClick={() => { router.push(`${space}/${direction}/${walk}`) }}>Explore Single Walk</Button>
                   </Stack>
                 </CardContent>
               </Card>
