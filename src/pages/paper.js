@@ -52,6 +52,7 @@ export default function PaperPage() {
 
 
   const handleSpaceChange = (event) => {
+    console.log(event.target.value);
     setSpace(event.target.value);
   };
 

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 import useWalk from '@component/stores/walk';
 import { CHART_COLORS } from './colors';
@@ -67,55 +67,8 @@ const generateRadarChart = (ref, walkData, start, end) => {
 
   // Firt filter data
   const { data, dimensions} = topAttributes(walkData, start, end, 8);
-  //console.log('start: ', start);
-  //console.log('end: ', end);
-
-  /*const dimensions = [
-    `${walkData.direction}`, 
-    'Male', 
-    'Young', 
-    'Brown_Hair', 
-    'Smiling', 
-    'No_Beard',
-  ]; //data.columns;*/
 
   d3.select(ref.current).selectAll("svg").remove();
-
-  // const walk = data.
-  // transform csv to json, with walk id as key
-  /*data = data.filter(function(d) {
-    return d.walk == walk;
-  })*/
-  //const d = data[0];
-
-  // TODO: later select columns with most impakt
-  
-  
-  // var output = []
-  // data[0];
-  //data.forEach(function(d) {
-  /*data = [0, 9].map(
-    (walkNum)=>{
-      var obj = {'walk': `${d.walk}_${walkNum}`}
-      dimensions.forEach(
-        (dimension)=>{
-          obj[dimension] = d[`${walkNum}_${dimension}`]
-      });
-      return obj;
-    }
-  );*/
-  
-  /* var obj = { 'walk': '0_' + d.walk, 
-              'Smiling': d['0_Smiling'], 
-              'Bangs': d['0_Bangs'] 
-            };
-  output.push(obj);
-  obj = { 'walk': '9_' + d.walk, 'Smiling': d['9_Smiling'], 'Bangs': d['9_Bangs'] };
-  output.push(obj);
-  // });
-  */
-  
-  //const names = dimensions.splice(0, 1)
 
   const svg = d3
     .select(ref.current)
