@@ -136,11 +136,11 @@ const generateLineChart = (ref, data, attribute, selectedWalks) => {
         .data(bins)
         .enter()
         .append("rect")
-        .attr("x", d => xBarScale(d.x0))
-        .attr("y", d => yBarScale(d.length))
-        .attr("height", d => barChartHeight - yBarScale(d.length))
-        .attr("width", d => xBarScale(d.x1) - xBarScale(d.x0) - 1)
-        .attr('fill', d => (d.x0 >= 0 ? secondary : primary));
+        .attr("x", d => xBarScale(+d.x0))
+        .attr("y", d => yBarScale(+d.length))
+        .attr("height", d => barChartHeight - yBarScale(+d.length))
+        .attr("width", d => xBarScale(+d.x1) - xBarScale(+d.x0))
+        .attr('fill', d => (+d.x0 >= 0 ? secondary : primary));
 
     svg.append("line")
         .attr("x1", lineChartWidth)  // x position of the first end of the line
@@ -158,19 +158,19 @@ const generateLineChart = (ref, data, attribute, selectedWalks) => {
  * @param {string} props.attribute - The changing attribute for the line chart.
  * @returns {JSX.Element} - The LineChart component, displaying a linechart for a single attribute for a selection of walks.
  */
-export function LineChart({attribute}) {
+export function LineChart({ attribute }) {
     const chartRef = useRef();
     const walks = useWalks(state => state.walks);
     const selectedWalks = useWalks(state => state.selectedWalks);
 
     // generate line chart after data is loaded
     useEffect(() => {
-        if (walks) {
+        if (walks.length > 0) {
             generateLineChart(chartRef, walks, attribute, selectedWalks);
         }
     }, [walks, attribute, selectedWalks]);
 
     return (
-        <svg viewBox={'0 0' + 800 + " " + 400} style={{ width: '300px', height: '110px' }} ref={chartRef} />
+        <svg style={{ width: '300px', height: '110px' }} ref={chartRef} />
     );
 };
