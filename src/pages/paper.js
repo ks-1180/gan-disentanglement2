@@ -87,6 +87,11 @@ const ImageStripe = ({ path }) => {
   );
 }
 
+/**
+ * PaperPage component.
+ * Renders the reimplementation of the visualization presented in the chosen paper.
+ * @returns {JSX.Element} PaperPage component.
+ */
 export default function PaperPage() {
 
   const direction = useWalks(state => state.direction);

@@ -1,6 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 
+/**
+ * API endpoint for retrieving walk data by chunk.
+ * @param {Object} req - The request object.The query holds the space, direction and index of the walks.
+ * @param {Object} res - The response object.
+ */
 export default async (req, res) => {
   const { space, direction, chunk } = req.query;
 

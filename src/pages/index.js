@@ -9,6 +9,11 @@ import Container from '@mui/material/Container';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import ButtonBases from '@component/components/complexButtons';
 
+/**
+ * Home component for documentation and explanation of the visualizations.
+ * Renders the home page of the application.
+ * @returns {JSX.Element} Home component.
+ */
 export default function Home() {
   return (
     <>
