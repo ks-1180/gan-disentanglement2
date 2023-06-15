@@ -74,8 +74,8 @@ const ImageStripe = ({ path }) => {
               src={path}
               ref={video.ref}
               title="video stripe"
-              sx={{ 
-                width: '100%', 
+              sx={{
+                width: '100%',
                 height: '110px', // explicit height setting
                 objectFit: 'contain' // added to maintain aspect ratio
               }}
@@ -96,6 +96,7 @@ export default function PaperPage() {
 
   const direction = useWalks(state => state.direction);
   const selectedWalks = useWalks(state => state.selectedWalks);
+  const loading = useWalks(state=>state.loading);
 
   const router = useRouter();
 
@@ -110,13 +111,14 @@ export default function PaperPage() {
   const path = `/videos/${space}/${direction}/${walk}.mp4`;
 
   const handleSpaceChange = (event) => {
-    console.log(event.target.value);
     setSpace(event.target.value);
   };
 
   useEffect(() => {
     // You can replace 'spaceValue' and 'directionValue' with the actual values you want to use
-    setSpaceAndDirection(space, direction);
+    if(!loading){
+      setSpaceAndDirection(space, direction);
+    }
   }, []);
 
   return (
@@ -153,8 +155,8 @@ export default function PaperPage() {
                         value={space}
                         onChange={handleSpaceChange}
                       >
-                        <FormControlLabel value="z" control={<Radio />} label="latent space (z)" />
-                        <FormControlLabel value="w" control={<Radio />} label="style space (w)" />
+                        <FormControlLabel value="z" control={<Radio />} label="latent space (z)" disabled={loading} />
+                        <FormControlLabel value="w" control={<Radio />} label="style space (w)" disabled={loading} />
                       </RadioGroup>
                     </FormControl>
                     <Button variant="contained" onClick={() => { router.push(`${space}/${direction}/${walk}`) }}>Explore Single Walk</Button>

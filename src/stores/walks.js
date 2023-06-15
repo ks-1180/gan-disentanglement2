@@ -60,23 +60,6 @@ const useWalks = create((set, get) => ({
     state.errorMessage = errorMessage;
   })),
 
-  /**
-   * Sets the space value (z or w) and triggers the fetch for corresponding walks.
-   * @param {string} space - The space value.
-   */
-  setSpace: async (space) => {
-    const { direction } = get();
-    await get().setSpaceAndDirection(space, direction);
-  },
-  
-  /**
-   * Sets the direction value and triggers the fetch for corresponding walks.
-   * @param {string} direction - The direction value.
-   */
-  setDirection: async (direction) => {
-    const { space } = get();
-    await get().setSpaceAndDirection(space, direction);
-  },
 
   /**
    * Fetches walks data from the API based on space, direction, and number of chunks.
@@ -85,13 +68,6 @@ const useWalks = create((set, get) => ({
    * @param {number} chunks - The number of chunks.
    */
   getWalks: async (space, direction, chunks = 10) => {
-    set(produce(state => {
-      state.loading = true;
-      state.walks = [];
-      state.error = false;
-      state.errorMessage = '';
-    }));
-
     try {
       for (let chunk = 0; chunk < chunks; chunk++) {
         try {
@@ -126,14 +102,34 @@ const useWalks = create((set, get) => ({
   },
 
   /**
+   * Sets the space value (z or w) and triggers the fetch for corresponding walks.
+   * @param {string} space - The space value.
+   */
+  setSpace: (space) => {
+    const { direction } = get();
+    get().setSpaceAndDirection(space, direction);
+  },
+  
+  /**
+   * Sets the direction value and triggers the fetch for corresponding walks.
+   * @param {string} direction - The direction value.
+   */
+  setDirection: (direction) => {
+    const { space } = get();
+    get().setSpaceAndDirection(space, direction);
+  },
+
+  /**
    * Sets the space and direction values and triggers the fetch for corresponding walks.
    * @param {string} space - The space value.
    * @param {string} direction - The direction value.
    */
   setSpaceAndDirection: (space, direction) => {
-    controller.abort();
-    controller = new AbortController();
-
+    if(get().loading){
+      // throw Error("already loading...");
+      console.log("already loading...")
+      return;
+    }
     set(produce(state => {
       state.space = space;
       state.direction = direction;

@@ -17,14 +17,11 @@ const generateLineChart = (ref, data, attribute, selectedWalks) => {
     const light_grey = CHART_COLORS.light_grey;
 
     let slopesValues = [];
-    const walks = data.map((obj) => {
+    let walks = [];
+    data.forEach((obj) => {
         let attrObj = obj.attributes.find(attr => attr.name === attribute);
-        if (attrObj) {
-            slopesValues.push(+attrObj.slope);
-            return attrObj.steps;
-        } else {
-            return [];
-        }
+        slopesValues.push(attrObj.slope);
+        walks.push(attrObj.steps);
     });
 
     let selectedWalksData = walks;
@@ -34,9 +31,6 @@ const generateLineChart = (ref, data, attribute, selectedWalks) => {
         slopesValues = selectedWalks.map((index) => slopesValues[index]);
     }
 
-
-    const flattenWalks = selectedWalksData.flat();
-
     const container = d3.select(ref.current)
 
     container.select('svg').remove();
@@ -45,7 +39,7 @@ const generateLineChart = (ref, data, attribute, selectedWalks) => {
     const width = container.node().clientWidth - margin.right;
     const height = container.node().clientHeight;
 
-    // line chart settings
+    // line chart settingsflattenWalks
     const lineChartWidth = width * 0.7 - margin.left;
     const innerWidth = lineChartWidth - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
@@ -82,7 +76,7 @@ const generateLineChart = (ref, data, attribute, selectedWalks) => {
         .domain([0, 99])
         .range([margin.left, lineChartWidth]);
 
-    const yValues = flattenWalks.map((d) => d);
+    // const yValues = flattenWalks.map((d) => d);
     const yScale = d3
         .scaleLinear()
         .domain([-1, 1])

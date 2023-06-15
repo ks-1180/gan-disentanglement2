@@ -85,8 +85,8 @@ const accessoiresAtt = [
  */
 export function FilterDialog() {
 
-  const direction = useWalks(state=>state.direction);
-  const setDirection = useWalks(state=>state.setDirection);
+  const direction = useWalks(state => state.direction);
+  const setDirection = useWalks(state => state.setDirection);
 
   const [open, setOpen] = React.useState(false);
 
@@ -112,20 +112,24 @@ export function FilterDialog() {
     }
   }, [open]);
 
-  const chipLayout = (attribute) => (
-    <Grid item key={attribute.value}>
-      <Chip
-        label={attribute.label}
-        clickable
-        variant={direction === attribute.value ? "filled" : "outlined"}
-        color={direction === attribute.value ? "primary" : "default"}
-        onClick={() => {
-          handleChipClick(attribute);
-          handleClose();
-        }}
-      />
-    </Grid>
-  );
+  const chipLayout = (attribute) => {
+    const loading = useWalks(state => state.loading);
+    return (
+      <Grid item key={attribute.value}>
+        <Chip
+          label={attribute.label}
+          clickable
+          variant={direction === attribute.value ? "filled" : "outlined"}
+          color={direction === attribute.value ? "primary" : "default"}
+          onClick={() => {
+            handleChipClick(attribute);
+            handleClose();
+          }}
+          disabled={loading}
+        />
+      </Grid>
+    )
+  };
 
   const generalChips = generalAtt.map((att) => chipLayout(att));
 
@@ -150,13 +154,7 @@ export function FilterDialog() {
           </Button>
         </Grid>
         <Grid item>
-          {/* <Chip
-            label={direction.replaceAll('_', ' ')}
-            variant={"filled"}
-            color={"default"}
-            onDelete={handleClickOpen}
-          />*/}
-          <Typography>{direction.replaceAll('_', ' ')}</Typography> 
+          <Typography>{direction.replaceAll('_', ' ')}</Typography>
         </Grid>
       </Grid>
       <Dialog

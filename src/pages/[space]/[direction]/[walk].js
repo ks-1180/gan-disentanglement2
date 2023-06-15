@@ -106,8 +106,6 @@ const Walk = ({ space, direction, walk }) => {
             let video = videoData.ref.current;
             if (video) {
                 const newTime = startSec + delta * videoData.i;
-                console.log(start, end, startSec, endSec, delta);
-                console.log(newTime);
                 video.currentTime = newTime;
             }
         });
