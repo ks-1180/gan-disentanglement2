@@ -173,7 +173,6 @@ const Walk = ({ space, direction, walk }) => {
                                 <ImageStripe videos={videos} path={path} />
                                 <CardContent>
                                     <Slider
-                                        getArialLabel={() => "Walk range"}
                                         value={[start, current, end]}
                                         onChange={handleSlider}
                                         valueLabelDisplay="auto"
