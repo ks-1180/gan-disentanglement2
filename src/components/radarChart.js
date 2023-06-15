@@ -1,7 +1,9 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import useWalk from '@component/stores/walk';
 import { CHART_COLORS } from './colors';
+import TextField from '@mui/material/TextField';
+
 
 /**
  * Calculates the x-coordinate for a point on the radar chart.
@@ -107,7 +109,7 @@ function topAttributes(data, start, end, numAxis) {
  * @param {number} start - The start index of the walk.
  * @param {number} end - The end index of the walk.
  */
-const generateRadarChart = (ref, walkData, start, end) => {
+const generateRadarChart = (ref, walkData, start, end, numAxes) => {
   const primary = CHART_COLORS.primary;
   const secondary = CHART_COLORS.secondary;
 
@@ -117,7 +119,7 @@ const generateRadarChart = (ref, walkData, start, end) => {
   const radius = (width - scaleR) / 2;
 
   // Firt filter data
-  const { data, dimensions } = topAttributes(walkData, start, end, 8);
+  const { data, dimensions } = topAttributes(walkData, start, end, numAxes);
 
   d3.select(ref.current).selectAll("svg").remove();
 
@@ -241,14 +243,33 @@ const RadarChart = () => {
   const start = useWalk(state => state.start);
   const end = useWalk(state => state.current);
 
+  const [numAxes, setNumAxes] = useState(8);
+
   useEffect(() => {
     if (walkData) {
-      generateRadarChart(chartRef, walkData, start, end)
+      generateRadarChart(chartRef, walkData, start, end, numAxes)
     }
-  });
+  }, [numAxes]);
+
+  useEffect(() => {
+    if (walkData && chartRef.current) {
+      generateRadarChart(chartRef, walkData, start, end, numAxes);
+    }
+  },); // Run only once on component mount
 
   return (
-    <svg viewBox={"0 0 " + 600 + " " + 400} ref={chartRef} />
+    <div>
+      <TextField
+        label="Axes"
+        type="number"
+        size="small"
+        value={numAxes}
+        onChange={(event) => setNumAxes(event.target.value)}
+        inputProps={{ min: 4, max: 29 }}
+        style={{ width: '70px' }}
+      />
+      <svg viewBox={"0 0 " + 600 + " " + 400} ref={chartRef} />
+    </div>
   );
 };
 
