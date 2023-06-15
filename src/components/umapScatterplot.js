@@ -135,9 +135,15 @@ const Scatterplot = () => {
                 <HtmlTooltip
                     title={
                     <>
-                        <Typography color="primary">UMAP Explanation</Typography>
+                        <Typography color="primary">UMAP Plot</Typography>
                         {/* your explanation goes here */}
-                        UMAP is a dimension reduction technique often used in data visualization.
+                        <p>
+                            The UMap-projection acts as a window for selecting walks in terms of similarity in their activations. 
+                            This representation of the walks is decoupled from the information that regression provides, and enables cross-examination of walks in two different representation. 
+                        </p>
+                        <br/>
+                        <p><b>Click:</b>  to select a datapoint</p>
+                        <p><b>Brush:</b>  to select multiple datapoints</p>
                     </>
                     }
                 >
