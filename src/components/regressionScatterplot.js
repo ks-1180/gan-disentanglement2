@@ -110,9 +110,9 @@ const generateScatterplot = (ref, walks, selectedWalks) => {
         .append("circle")
         .attr("cx", (d) => xScale(+d.slope))
         .attr("cy", (d) => yScale(+d.r2))
-        .attr("r", 3)
+        .attr("r", 4)
         .attr("fill", (d) => (selectedWalks.includes(d.walk) ? primary : secondary)) // Change fill color based on condition
-        .attr("opacity", 0.5)
+        .attr("opacity", (d) => (selectedWalks.includes(d.walk) ? 0.9 : 0.5))
         .attr("class", "scatterplot-circle");
 
     svg.append("g").attr("transform", `translate(0,${height})`).call(xAxis);

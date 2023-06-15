@@ -1,6 +1,6 @@
 const ORIGINAL = {
     'primary': '#ff9100',
-    'secondary': '#009688',
+    'secondary': '#55b3a6',
     'light_grey': '#d4d4d4',
     'radar_primary': '#7c9c99',
     'radar_secondary': '#ff9100',

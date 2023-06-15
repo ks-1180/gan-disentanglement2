@@ -28,10 +28,11 @@ const themeOptions: ThemeOptions = {
       textAlign: 'left'
     },
     h3: {
-      color: '#000',
-      fontSize: '1rem',
-      fontWeight: '700',
-      textAlign: 'left'
+      fontWeight: '500',
+      fontSize: 16,
+      textAlign: 'left',
+      textTransform: 'uppercase',
+      letterSpacing: 2,
     },
     h6: {
       fontWeight: '300',

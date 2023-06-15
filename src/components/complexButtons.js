@@ -12,12 +12,12 @@ import { useRouter } from 'next/router';
  */
 const images = [
     {
-        url: 'https://source.unsplash.com/random?wallpapers',
+        url: '/images/paper.png',
         title: 'Paper Reimplementation',
         route: '/paper'
     },
     {
-        url: 'https://source.unsplash.com/random?wallpapers',
+        url: '/images/detail.png',
         title: 'Own Implementation',
         route: '/selection'
     },
@@ -28,7 +28,7 @@ const images = [
  */
 const ImageButton = styled(ButtonBase)(({ theme }) => ({
     position: 'relative',
-    height: 200,
+    height: 300,
     [theme.breakpoints.down('sm')]: {
         width: '100% !important', // Overrides inline-style
         height: 100,
@@ -133,7 +133,7 @@ export default function ButtonBases() {
                     <Image>
                         <Typography
                             component="span"
-                            variant="subtitle1"
+                            variant="h3"
                             color="inherit"
                             sx={{
                                 position: 'relative',
