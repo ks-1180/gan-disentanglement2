@@ -23,7 +23,7 @@ function scale(index, point) {
 }
 
 function topAttributes(data, start, end, numAxis) {
-  if(start < 0 || start > end || end >= data.attributes[0].steps.length) {
+  if (start < 0 || start > end || end >= data.attributes[0].steps.length) {
     return "Invalid start or end index";
   }
 
@@ -66,9 +66,12 @@ const generateRadarChart = (ref, walkData, start, end) => {
   const radius = (width - scaleR) / 2;
 
   // Firt filter data
-  const { data, dimensions} = topAttributes(walkData, start, end, 8);
+  const { data, dimensions } = topAttributes(walkData, start, end, 8);
 
   d3.select(ref.current).selectAll("svg").remove();
+
+
+  //const names = dimensions.splice(0, 1)
 
   const svg = d3
     .select(ref.current)
@@ -93,87 +96,87 @@ const generateRadarChart = (ref, walkData, start, end) => {
   for (let i = 0; i < numLevels; i++) {
     levels[i] = levelSpace * (i + 1);
   }
-    const grid = svg
-      .selectAll('.grid')
-      .data(dimensions)
-      .enter()
-      .append("g");
+  const grid = svg
+    .selectAll('.grid')
+    .data(dimensions)
+    .enter()
+    .append("g");
 
-    const radarAxisAngle = Math.PI * 2 / dimensions.length;
+  const radarAxisAngle = Math.PI * 2 / dimensions.length;
 
-    levels.forEach(l =>
-      grid.append("line")
-        .attr("x1", function (d, i) { return radarX(axisRadius(l), i, radarAxisAngle); })
-        .attr("y1", function (d, i) { return radarY(axisRadius(l), i, radarAxisAngle); })
-        .attr("x2", function (d, i) { return radarX(axisRadius(l), i + 1, radarAxisAngle); })
-        .attr("y2", function (d, i) { return radarY(axisRadius(l), i + 1, radarAxisAngle); })
-        .attr("class", "line")
-        .attr("stroke", CHART_COLORS.light_grey)
-        .attr("stroke-width", 1.5)
-    );
-
-    // render labels
-    const radarAxes = svg
-      .selectAll('.axis')
-      .data(dimensions)
-      .enter()
-      .append('g')
-      .attr('class', 'axis')
-
-    radarAxes
-      .append('line')
-      .attr('x1', 0)
-      .attr('y1', 0)
-      .attr("x2", function (d, i) { return radarX(axisRadius(maxAxisRadius), i, radarAxisAngle); })
-      .attr("y2", function (d, i) { return radarY(axisRadius(maxAxisRadius), i, radarAxisAngle); })
+  levels.forEach(l =>
+    grid.append("line")
+      .attr("x1", function (d, i) { return radarX(axisRadius(l), i, radarAxisAngle); })
+      .attr("y1", function (d, i) { return radarY(axisRadius(l), i, radarAxisAngle); })
+      .attr("x2", function (d, i) { return radarX(axisRadius(l), i + 1, radarAxisAngle); })
+      .attr("y2", function (d, i) { return radarY(axisRadius(l), i + 1, radarAxisAngle); })
       .attr("class", "line")
-      .style("stroke", CHART_COLORS.light_grey)
-      .attr("stroke-width", 1.5);
+      .attr("stroke", CHART_COLORS.light_grey)
+      .attr("stroke-width", 1.5)
+  );
 
-    svg.selectAll('.axisLabel')
-      .data(dimensions)
-      .enter()
-      .append('text')
-      .attr("text-anchor", "middle")
-      .attr("dy", "0.35em")
-      .attr("x", function (d, i) { return radarX(axisRadius(textRadius), i, radarAxisAngle); })
-      .attr("y", function (d, i) { return radarY(axisRadius(textRadius), i, radarAxisAngle); })
-      .style("font-size", "12px")
-      .style("fill", CHART_COLORS.axis)
-      .text(function (d, i) { return dimensions[i].replaceAll('_', ' '); });
+  // render labels
+  const radarAxes = svg
+    .selectAll('.axis')
+    .data(dimensions)
+    .enter()
+    .append('g')
+    .attr('class', 'axis')
+
+  radarAxes
+    .append('line')
+    .attr('x1', 0)
+    .attr('y1', 0)
+    .attr("x2", function (d, i) { return radarX(axisRadius(maxAxisRadius), i, radarAxisAngle); })
+    .attr("y2", function (d, i) { return radarY(axisRadius(maxAxisRadius), i, radarAxisAngle); })
+    .attr("class", "line")
+    .style("stroke", CHART_COLORS.light_grey)
+    .attr("stroke-width", 1.5);
+
+  svg.selectAll('.axisLabel')
+    .data(dimensions)
+    .enter()
+    .append('text')
+    .attr("text-anchor", "middle")
+    .attr("dy", "0.35em")
+    .attr("x", function (d, i) { return radarX(axisRadius(textRadius), i, radarAxisAngle); })
+    .attr("y", function (d, i) { return radarY(axisRadius(textRadius), i, radarAxisAngle); })
+    .style("font-size", "12px")
+    .style("fill", CHART_COLORS.axis)
+    .text(function (d, i) { return dimensions[i].replaceAll('_', ' '); });
 
     // render polylines
     const color = [CHART_COLORS.radar_secondary, CHART_COLORS.radar_primary];
     const data1 = [data[0]];
 
 
-    svg.selectAll('path')
-      .data(data, function (d) { return d[dimensions[0]]; })
-      .join(
-        enter => enter
-          .append('path')
-          .attr('d', function (d, i) {
-            let path = 'M ';
-            dimensions.forEach(function (dim, j) {
+  svg.selectAll('path')
+    .data(data, function (d) { return d[dimensions[0]]; })
+    .join(
+      enter => enter
+        .append('path')
+        .attr('d', function (d, i) {
+          let path = 'M ';
+          dimensions.forEach(function (dim, j) {
 
-              let x1 = radarX(axisRadius(scale(j, d[dim])), j, radarAxisAngle);
-              let y1 = radarY(axisRadius(scale(j, d[dim])), j, radarAxisAngle);
-              //let x1 = j;
-              //let y1 = j;
+            let x1 = radarX(axisRadius(scale(j, d[dim])), j, radarAxisAngle);
+            let y1 = radarY(axisRadius(scale(j, d[dim])), j, radarAxisAngle);
+            //let x1 = j;
+            //let y1 = j;
 
-              path += x1 + ' ' + y1 + ' ';
-            })
-            path += "Z";
-            return path;
+            path += x1 + ' ' + y1 + ' ';
           })
-          .attr("stroke", function (d, i) { return color[i] })
-          .attr("fill", function (d, i) { return color[i] })
-          //.attr("fill", "none")
-          .attr('fill-opacity', 0.1)
-          .attr("stroke-width", 3)
-      );
+          path += "Z";
+          return path;
+        })
+        .attr("stroke", function (d, i) { return color[i] })
+        .attr("fill", function (d, i) { return color[i] })
+        //.attr("fill", "none")
+        .attr('fill-opacity', 0.1)
+        .attr("stroke-width", 3)
+    );
 
-  }
+}
 
 
 
@@ -181,15 +184,15 @@ const RadarChart = () => {
   const chartRef = useRef();
   const legendRef = useRef();
 
-  const walkData = useWalk(state=>state.walkData);
-  const start = useWalk(state=>state.start);
-  const end = useWalk(state=>state.end);
+  const walkData = useWalk(state => state.walkData);
+  const start = useWalk(state => state.start);
+  const end = useWalk(state => state.current);
 
   useEffect(() => {
     if (walkData) {
       generateRadarChart(chartRef, walkData, start, end)
     }
-  }); 
+  });
 
   return (
     <svg viewBox={"0 0 " + 600 + " " + 400} ref={chartRef} />
