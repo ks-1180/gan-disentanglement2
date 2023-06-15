@@ -1,9 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import useWalks from '@component/stores/walks';
+import { CHART_COLORS } from './colors';
 
 const generateLineChart = (ref, data, attribute, selectedWalks) => {
-    
+    const primary = CHART_COLORS.primary;
+    const secondary = CHART_COLORS.secondary;
+    const light_grey = CHART_COLORS.light_grey;
 
     let slopesValues = [];
     const walks = data.map((obj) => {
@@ -87,7 +90,7 @@ const generateLineChart = (ref, data, attribute, selectedWalks) => {
         .y((d, i) => yScale(d));
 
 
-    selectedWalksData.slice(0, 100).forEach((walk) => {
+    selectedWalksData.forEach((walk) => {
         svg
             .append('path')
             .datum(walk)
@@ -133,7 +136,7 @@ const generateLineChart = (ref, data, attribute, selectedWalks) => {
         .attr("y", d => yBarScale(d.length)) 
         .attr("height", d => barChartHeight - yBarScale(d.length))
         .attr("width", d => xBarScale(d.x1) - xBarScale(d.x0) - 1)
-        .attr('fill', d => (d.x0 >= 0 ? '#009688' : '#d4d4d4'));
+        .attr('fill', d => (d.x0 >= 0 ? secondary : primary));
 
     svg.append("line")
         .attr("x1", lineChartWidth)  // x position of the first end of the line
@@ -141,7 +144,7 @@ const generateLineChart = (ref, data, attribute, selectedWalks) => {
         .attr("x2", lineChartWidth)  // x position of the second end of the line
         .attr("y2", height)    // y position of the second end of the line
         .attr("stroke-width", 1)
-        .attr("stroke", "#d4d4d4");
+        .attr("stroke", light_grey);
 
     /*const walk = [
         { time: 0, value: 3.182290674885735e-05 },
