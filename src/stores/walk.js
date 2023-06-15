@@ -12,10 +12,16 @@ const useWalk = create((set, get) => ({
     error: false,
     errorMessage: '',
     start: 0,
+    current: 10,
     end: 99,
     setStart: (start) => {
         set(produce(state => {
             state.start = start
+        }));
+    },
+    setCurrent: (current) => {
+        set(produce(state => {
+            state.current = current
         }));
     },
     setEnd: (end) => {

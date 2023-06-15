@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -15,6 +15,12 @@ import VideoCard from '@component/components/video';
 import { WalkDisplay } from "@component/components/walkDisplay";
 import { PrismaClient } from '@prisma/client';
 import useWalk from '@component/stores/walk';
+
+function linspace(start, end, n) {
+    const diff = end - start;
+    const step = diff / (n - 1);
+    return Array.from({ length: n }, (_, i) => start + i * step);
+}
 
 export async function getStaticPaths() {
     // Here you would fetch all walk IDs and their directions you want to pre-render.
@@ -37,15 +43,58 @@ export async function getStaticProps({ params }) {
     return { props: { direction: direction, walk: walk, space: space } }
 }
 
+const ImageStripe = ({ videos, path }) => {
+    return (
+        <Box sx={{ display: 'flex', flexDirection: 'row', width: '100%', overflow: 'hidden', paddingTop: '26px', paddingLeft: '26px', paddingRight: '26px' }}>
+            {
+                videos.map((video) =>
+                    <Box key={video.i} sx={{ flexBasis: '10%', flexGrow: 1, maxWidth: '10%' }}>
+                        <CardMedia
+                            component="video"
+                            src={path}
+                            ref={video.ref}
+                            title="green iguana"
+                            sx={{ width: '100%' }}
+                        />
+                    </Box>
+                )
+            }
+        </Box>
+    );
+}
 
 const Walk = ({ space, direction, walk }) => {
     const router = useRouter();
     const setSpaceDirectionWalk = useWalk(state => state.setSpaceDirectionWalk);
 
-    let start = useWalk(state=>state.start);
-    let end = useWalk(state=>state.end);
-    const setStart = useWalk(state=>state.setStart);
-    const setEnd = useWalk(state=>state.setEnd);
+    const start = useWalk(state => state.start);
+    const current = useWalk(state => state.current);
+    const end = useWalk(state => state.end);
+    const setStart = useWalk(state => state.setStart);
+    const setCurrent = useWalk(state=>state.setCurrent);
+    const setEnd = useWalk(state => state.setEnd);
+
+    const videos = linspace(0, 1, 10).map((i) => {
+        return {
+            ref: useRef(null),
+            i: i
+        }
+    });
+
+    useEffect(() => {
+        const startSec = start / 20;
+        const endSec = end / 20;
+        const delta = endSec - startSec;
+        videos.forEach(videoData => {
+            let video = videoData.ref.current;
+            if (video) {
+                const newTime = startSec + delta * videoData.i;
+                console.log(start, end, startSec, endSec, delta);
+                console.log(newTime);
+                video.currentTime = newTime;
+            }
+        });
+    }, [start, end, ...videos.map(video => video.ref)]);
 
     const minDistance = 1;
     const handleSlider = (event, newValue, activeThumb) => {
@@ -54,8 +103,14 @@ const Walk = ({ space, direction, walk }) => {
         }
         if (activeThumb === 0) {
             setStart(Math.min(newValue[0], end - minDistance));
+        } else if (activeThumb == 1) {
+            const val = Math.max(
+                Math.min(newValue[1], end - minDistance),
+                start + minDistance
+            );
+            setCurrent(val);
         } else {
-            setEnd(Math.max(newValue[1], start + minDistance));
+            setEnd(Math.max(newValue[2], start + minDistance));
         }
     };
 
@@ -71,7 +126,7 @@ const Walk = ({ space, direction, walk }) => {
     }
 
 
-    const path = `/walks/${direction}/${walk}.jpg`;
+    const path = `/videos/${space}/${direction}/${walk}.mp4`
     return (
         <>
             <AppBar position="relative">
@@ -84,7 +139,7 @@ const Walk = ({ space, direction, walk }) => {
             </AppBar>
             <main>
                 <Container sx={{ py: 4 }} maxWidth="lg">
-                    <Grid container spacing={2}>
+                    <Grid container spacing={2} alignItems={"stretch"}>
                         <Grid item xs={12} sm={12} md={12}>
                             <Card
                                 sx={{
@@ -93,11 +148,11 @@ const Walk = ({ space, direction, walk }) => {
                                     flexDirection: "column",
                                 }}
                             >
-                                <CardMedia component="img" image={path} alt="s" />
+                                <ImageStripe videos={videos} path={path} />
                                 <CardContent>
                                     <Slider
-                                        getArialLabel={() => "Walk range"} 
-                                        value={[start, end]}
+                                        getArialLabel={() => "Walk range"}
+                                        value={[start, current, end]}
                                         onChange={handleSlider}
                                         valueLabelDisplay="auto"
                                         step={1}
@@ -110,12 +165,6 @@ const Walk = ({ space, direction, walk }) => {
                         </Grid>
                         <Grid item xs={12} sm={12} md={6}>
                             <VideoCard path={`/videos/${space}/${direction}/${walk}.mp4`} />
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={6}>
-                            <VideoCard path={`/videos/${space}/${direction}/${walk}.mp4`} />
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={6}>
-                            <RadarChartDisplay direction={{ value: direction }} walk={walk} />
                         </Grid>
                         <Grid item xs={12} sm={12} md={6}>
                             <RadarChartDisplay direction={{ value: direction }} walk={walk} />
