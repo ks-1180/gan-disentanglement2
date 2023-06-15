@@ -29,14 +29,15 @@ import FormLabel from '@mui/material/FormLabel';
 
 export default function PaperPage() {
 
-  const [direction, setDirection] = useState({ label: 'Eyeglasses', value: 'Eyeglasses' });
-  const [walk, setWalk] = useState([1]);
+  const direction = useWalks(state=>state.direction);
+  const selectedWalks = useWalks(state=>state.selectedWalks);
+
   const router = useRouter();
 
-  let path = `/walks/${direction.value}/${walk[0]}.jpg`;
+  let path = `/walks/${direction}/${selectedWalks[0]}.jpg`;
 
-  if (!walk.length) {
-    path = `/walks/${direction.value}/1.jpg`;
+  if (!selectedWalks.length) {
+    path = `/walks/${direction}/1.jpg`;
   }
 
   const walks = useWalks(state => state.walks);
@@ -45,7 +46,6 @@ export default function PaperPage() {
   const setSpaceAndDirection = useWalks(state=>state.setSpaceAndDirection);
 
   const space = useWalks(state=>state.space);
-  const direction2 = useWalks(state=>state.direction);
   const loading = useWalks(state=>state.loading);
   const error = useWalks(state=>state.error);
   const errorMessage = useWalks(state=>state.errorMessage);
@@ -57,7 +57,7 @@ export default function PaperPage() {
 
   useEffect(() => {
     // You can replace 'spaceValue' and 'directionValue' with the actual values you want to use
-    setSpaceAndDirection(space, direction.value);
+    setSpaceAndDirection(space, direction);
   }, []);
 
   return (
@@ -84,7 +84,7 @@ export default function PaperPage() {
                 <CardMedia component="img" image={path} alt="walk" />
                 <CardContent sx={{ flexGrow: 1 }}>
                   <Stack direction={'row'} justifyContent={'space-between'}>
-                    <FilterDialog direction={direction} setDirection={setDirection} />
+                    <FilterDialog/>
                     <FormControl>
                       <RadioGroup
                         row
@@ -114,7 +114,7 @@ export default function PaperPage() {
               </Grid>
             </Grid>
             <Grid item xs={12} sm={12} md={6}>
-                {/*<LineChartDisplay />*/}
+                <LineChartDisplay />
             </Grid>
           </Grid>
         </Container>

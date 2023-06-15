@@ -2,8 +2,12 @@
 
 import { Card, CardContent } from "@mui/material";
 import { LineChart } from "@component/components/lineChart";
+import { useState } from "react";
 
-export function LineChartDisplay(props) {
+export function LineChartDisplay() {
+
+    const [showMore, setShowMore] = useState(false);
+
     const attributes = [
         "Arched_Eyebrows",
         "Bags_Under_Eyes",
@@ -15,9 +19,9 @@ export function LineChartDisplay(props) {
         "Brown_Hair",
         "Bushy_Eyebrows",
         "Chubby", // 10
-        "Double_Chin",
+        /*"Double_Chin",
         "Eyeglasses",
-        /*"Goatee",
+        "Goatee",
         "Grey_Hair",
         "Heavy_Makeup",
         "High_Cheekbones",
@@ -43,7 +47,7 @@ export function LineChartDisplay(props) {
                 height: "100%",
                 width: "100%",
                 display: "flex",
-                flexDirection: "column",
+                flexDirection: "column"
             }}
         >
             <CardContent 
@@ -54,7 +58,7 @@ export function LineChartDisplay(props) {
                 }}>
                 {attributes.map((attribute, index) => (
                     <div key={index}>
-                        <LineChart {...props} attribute={attribute}/>
+                        <LineChart attribute={attribute}/>
                     </div>
                 ))}
             </CardContent>

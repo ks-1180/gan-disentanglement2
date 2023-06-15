@@ -2,35 +2,29 @@ import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import useWalks from '@component/stores/walks';
 
-const generateLineChart = (ref, walks, attribute, selectedWalks) => {
+const generateLineChart = (ref, data, attribute, selectedWalks) => {
     
-    let attributes = [];
-    let slopes = [];
 
-    walks.forEach(walk=>{
-
-    });
-
-    const data = walks.map((row) => {
-        const d = [];
-        Object.keys(row).forEach((key) => {
-            if (key.includes(attribute)) {
-                d.push({time: key.split('_')[0], value: row[key]});
-            }
-        });
-        return d;
+    let slopesValues = [];
+    const walks = data.map((obj) => {
+        let attrObj = obj.attributes.find(attr => attr.name === attribute);
+        if (attrObj) {
+            slopesValues.push(+attrObj.slope);
+            return attrObj.steps;
+        } else {
+            return [];
+        }
     });
 
     let selectedWalksData = walks;
 
     if (selectedWalks.length > 0) {
         selectedWalksData = selectedWalks.map((index) => walks[index]);
+        slopesValues = selectedWalks.map((index)=>slopesValues[index]);
     }
         
 
     const flattenWalks = selectedWalksData.flat();
-
-    const slopesValues = slopes.map((d) => +d.slope);
 
     const container = d3.select(ref.current)
 
@@ -74,10 +68,10 @@ const generateLineChart = (ref, walks, attribute, selectedWalks) => {
 
     const xScale = d3
         .scaleLinear()
-        .domain([0, 9])
+        .domain([0, 99])
         .range([margin.left, lineChartWidth]);
 
-    const yValues = flattenWalks.map((d) => d.value);
+    const yValues = flattenWalks.map((d) => d);
     const yScale = d3
         .scaleLinear()
         .domain([-1, 1])
@@ -90,7 +84,7 @@ const generateLineChart = (ref, walks, attribute, selectedWalks) => {
     const line = d3
         .line()
         .x((d, i) => xScale(i))
-        .y((d, i) => yScale(d.value));
+        .y((d, i) => yScale(d));
 
 
     selectedWalksData.slice(0, 100).forEach((walk) => {
@@ -174,6 +168,9 @@ export function LineChart({attribute}) {
     const chartRef = useRef();
     const walks = useWalks(state=>state.walks);
     const selectedWalks = useWalks(state=>state.selectedWalks);
+
+    console.log('walks: ', walks);
+    console.log('selected walks: ', selectedWalks);
 
     // generate line chart after data is loaded
     useEffect(() => {

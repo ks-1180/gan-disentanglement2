@@ -101,7 +101,9 @@ const Scatterplot = () => {
     const setSelectedWalks = useWalks(state => state.setSelectedWalks);
 
     useEffect(() => {
-        generateScatterplot(chartRef, walks, selectedWalks, setSelectedWalks);
+        if (walks) {
+            generateScatterplot(chartRef, walks, selectedWalks, setSelectedWalks);
+        }
     }, [walks, selectedWalks]);
 
     return (
