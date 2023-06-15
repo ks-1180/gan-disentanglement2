@@ -123,7 +123,9 @@ const RegressionScatterplot = () => {
     };
 
     useEffect(() => {
-        generateScatterplot(chartRef, walks, selectedWalks);
+        if(walks){
+            generateScatterplot(chartRef, walks, selectedWalks);
+        }
     }, [walks, selectedWalks]);
 
     return (

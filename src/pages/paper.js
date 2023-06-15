@@ -98,22 +98,14 @@ export default function PaperPage() {
 
   const router = useRouter();
 
-
   let walk = 1;
   if (selectedWalks.length > 0) {
     walk = selectedWalks[0];
   }
 
-  const walks = useWalks(state => state.walks);
-
   const setSpace = useWalks(state => state.setSpace);
   const setSpaceAndDirection = useWalks(state => state.setSpaceAndDirection);
-
   const space = useWalks(state => state.space);
-  const loading = useWalks(state => state.loading);
-  const error = useWalks(state => state.error);
-  const errorMessage = useWalks(state => state.errorMessage);
-
   const path = `/videos/${space}/${direction}/${walk}.mp4`;
 
   const handleSpaceChange = (event) => {

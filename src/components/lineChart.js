@@ -23,9 +23,9 @@ const generateLineChart = (ref, data, attribute, selectedWalks) => {
 
     if (selectedWalks.length > 0) {
         selectedWalksData = selectedWalks.map((index) => walks[index]);
-        slopesValues = selectedWalks.map((index)=>slopesValues[index]);
+        slopesValues = selectedWalks.map((index) => slopesValues[index]);
     }
-        
+
 
     const flattenWalks = selectedWalksData.flat();
 
@@ -126,14 +126,14 @@ const generateLineChart = (ref, data, attribute, selectedWalks) => {
         .append('g')
         .attr('class', 'bar-chart-container')
         .attr('transform', `translate(${lineChartWidth + margin.left}, 0)`);
-    
+
     barChartContainer
         .selectAll('rect')
         .data(bins)
         .enter()
         .append("rect")
         .attr("x", d => xBarScale(d.x0))
-        .attr("y", d => yBarScale(d.length)) 
+        .attr("y", d => yBarScale(d.length))
         .attr("height", d => barChartHeight - yBarScale(d.length))
         .attr("width", d => xBarScale(d.x1) - xBarScale(d.x0) - 1)
         .attr('fill', d => (d.x0 >= 0 ? secondary : primary));
@@ -167,14 +167,16 @@ const generateLineChart = (ref, data, attribute, selectedWalks) => {
         .call(d3.axisBottom(xScale))*/
 }
 
-export function LineChart({attribute}) {
+export function LineChart({ attribute }) {
     const chartRef = useRef();
-    const walks = useWalks(state=>state.walks);
-    const selectedWalks = useWalks(state=>state.selectedWalks);
+    const walks = useWalks(state => state.walks);
+    const selectedWalks = useWalks(state => state.selectedWalks);
 
     // generate line chart after data is loaded
     useEffect(() => {
-        generateLineChart(chartRef, walks, attribute, selectedWalks);
+        if (walks) {
+            generateLineChart(chartRef, walks, attribute, selectedWalks);
+        }
     }, [walks, attribute, selectedWalks]);
 
     // useEffect(() => {
@@ -194,6 +196,6 @@ export function LineChart({attribute}) {
 
 
     return (
-        <svg viewBox={'0 0' + 800 + " " + 400} style={{width: '300px', height: '110px'}} ref={chartRef}/>
+        <svg viewBox={'0 0' + 800 + " " + 400} style={{ width: '300px', height: '110px' }} ref={chartRef} />
     );
 };
