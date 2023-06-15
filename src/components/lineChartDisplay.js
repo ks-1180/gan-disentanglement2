@@ -33,7 +33,7 @@ export function LineChartDisplay() {
         "Double_Chin",
         "Eyeglasses",
         "Goatee",
-        "Grey_Hair",
+        "Gray_Hair",
         "Heavy_Makeup",
         "High_Cheekbones",
         "Male",
