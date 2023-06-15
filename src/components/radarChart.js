@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 import useWalk from '@component/stores/walk';
 import { CHART_COLORS } from './colors';
@@ -146,7 +146,7 @@ const generateRadarChart = (ref, walkData, start, end) => {
     .text(function (d, i) { return dimensions[i].replaceAll('_', ' '); });
 
     // render polylines
-    const color = [CHART_COLORS.radar_secondary, CHART_COLORS.radar_primary];
+    const color = [CHART_COLORS.radar_primary, CHART_COLORS.radar_secondary];
     const data1 = [data[0]];
 
 

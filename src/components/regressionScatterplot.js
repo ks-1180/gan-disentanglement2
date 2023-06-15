@@ -50,11 +50,11 @@ const generateScatterplot = (ref, walks, selectedWalks) => {
 
 
     // create scales for the x and.slope axes
-    const minX = d3.min(data, d => +d.r2);
-    const maxX = d3.max(data, d => +d.r2);
+    const minX = d3.min(data, d => +d.slope);
+    const maxX = d3.max(data, d => +d.slope);
 
-    const minY = d3.min(data, d => +d.slope);
-    const maxY = d3.max(data, d => +d.slope);
+    const minY = d3.min(data, d => +d.r2);
+    const maxY = d3.max(data, d => +d.r2);
 
     const xScale = d3
         .scaleLinear()
@@ -85,22 +85,22 @@ const generateScatterplot = (ref, walks, selectedWalks) => {
         .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90,"+margin.left/2+","+height/2+")") // rotate the text to make it vertical
         .style("font-size", "12px")
-        .text("slope");
-
+        .html("R<tspan dy='-5px' style='font-size: 9px;'>2</tspan>");
+        
     svg.append("text")
         .attr("x", (width / 2))
         .attr("y", height + 35)
         .attr("text-anchor", "middle")
         .style("font-size", "12px")
-        .html("R<tspan dy='-5px' style='font-size: 9px;'>2</tspan>");
+        .text("slope");
 
     svg
         .selectAll("circle")
         .data(data)
         .enter()
         .append("circle")
-        .attr("cx", (d) => xScale(+d.r2))
-        .attr("cy", (d) => yScale(+d.slope))
+        .attr("cx", (d) => xScale(+d.slope))
+        .attr("cy", (d) => yScale(+d.r2))
         .attr("r", 3)
         .attr("fill", (d) => (selectedWalks.includes(d.walk) ? primary : secondary)) // Change fill color based on condition
         .attr("opacity", 0.5)
@@ -143,7 +143,18 @@ const RegressionScatterplot = () => {
                             <>
                                 <Typography color="primary">Regreesion Plot</Typography>
                                 {/* your explanation goes here */}
-                                UMAP is a dimension reduction technique often used in data visualization.
+                                <p>
+                                    In this scatterplot, the points represent combinations of walks and their attribute-specific linear regression models. 
+                                    The x-axis shows the model's slope, while the y-axis represents its R2 coefficient. 
+                                    This provides a quick overview of the selected direction's quality. 
+                                    If the points cluster around the centerline, it indicates that the direction does not reflect any of the attributes. 
+                                    Conversely, points spreading out towards the upper left/right suggest consistent decrease/increase in certain attributes.
+                                </p>
+                                <br/>
+                                <p>
+                                    <b>Interaction:</b> none
+                                </p>
+                                
                             </>
                             }
                         >

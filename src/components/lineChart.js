@@ -172,9 +172,6 @@ export function LineChart({attribute}) {
     const walks = useWalks(state=>state.walks);
     const selectedWalks = useWalks(state=>state.selectedWalks);
 
-    console.log('walks: ', walks);
-    console.log('selected walks: ', selectedWalks);
-
     // generate line chart after data is loaded
     useEffect(() => {
         generateLineChart(chartRef, walks, attribute, selectedWalks);

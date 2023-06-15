@@ -117,6 +117,7 @@ export default function PaperPage() {
   const path = `/videos/${space}/${direction}/${walk}.mp4`;
 
   const handleSpaceChange = (event) => {
+    console.log(event.target.value);
     setSpace(event.target.value);
   };
 
