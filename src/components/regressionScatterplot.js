@@ -1,12 +1,26 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
-import { csv } from "d3-fetch"
-import Paper from "@mui/material/Paper";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import useWalk from "@component/stores/walk";
 import useWalks from "@component/stores/walks";
 import { CHART_COLORS } from "./colors";
+import { styled } from '@mui/material/styles';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+
+const HtmlTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: '#f5f5f9',
+      color: 'rgba(0, 0, 0, 0.87)',
+      maxWidth: 220,
+      fontSize: theme.typography.pxToRem(12),
+      border: '1px solid #dadde9',
+    },
+  }));
 
 const generateScatterplot = (ref, walks, selectedWalks) => {
     const primary = CHART_COLORS.primary;
@@ -66,13 +80,6 @@ const generateScatterplot = (ref, walks, selectedWalks) => {
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
     svg.append("text")
-        .attr("x", (width / 2))
-        .attr("y", margin.top / 2)
-        .attr("text-anchor", "middle")
-        .style("font-size", "15px")
-        .text("Regression");
-
-    svg.append("text")
         .attr("x", margin.left / 2)
         .attr("y", height / 2 - 70)
         .attr("text-anchor", "middle")
@@ -110,9 +117,6 @@ const RegressionScatterplot = () => {
     const walks = useWalks(state => state.walks);
     const selectedWalks = useWalks(state => state.selectedWalks);
 
-    // const [data, setData] = useState([]);
-    // const [isDataLoaded, setIsDataLoaded] = useState(false);
-
     const handleClick = (event, d) => {
         // your code to handle click event
         // setWalk(d.walk);
@@ -132,6 +136,22 @@ const RegressionScatterplot = () => {
                 }}
             >
                 <CardContent sx={{ flexGrow: 1 }}>
+                    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                        <Typography variant="h6" component="div" style={{flexGrow: 1, textAlign: 'center'}}>Regression</Typography>
+                        <HtmlTooltip
+                            title={
+                            <>
+                                <Typography color="primary">Regreesion Plot</Typography>
+                                {/* your explanation goes here */}
+                                UMAP is a dimension reduction technique often used in data visualization.
+                            </>
+                            }
+                        >
+                            <IconButton>
+                                <HelpOutlineIcon/>
+                            </IconButton>
+                        </HtmlTooltip>
+                    </div>
                     <svg
                         viewBox={"0 0 " + 600 + " " + 400}
                         ref={chartRef} />
